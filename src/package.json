@@ -1,0 +1,8 @@
+{
+    "name": "my-memo",
+    "version": "1.0.0",
+    "description": "Test",
+    "main": "application/application.js",
+    "author": "mai-shirayama",
+    "license": "MIT"
+}

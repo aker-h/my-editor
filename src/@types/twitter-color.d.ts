@@ -1,0 +1,1 @@
+type TwitterColor = 'light-blue' | 'light-green' | 'orange' | 'pink' | 'purple' | 'yellow';
