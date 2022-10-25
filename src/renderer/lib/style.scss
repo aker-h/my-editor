@@ -1,0 +1,67 @@
+div.react-outer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    div.loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        -webkit-app-region: drag;
+
+        div.loading-animation {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            width: 64px;
+            height: 64px;
+
+            div.spinner-border {
+                --size: 64px;
+                width: var(--size);
+                height: var(--size);
+                animation: spinner-border 1s linear infinite;
+            }
+        }
+
+        div.status-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            font-size: 20px;
+        }
+    }
+
+    div.header {
+        height: var(--header-height);
+        border-bottom: 1px solid var(--color-borderline);
+        -webkit-app-region: drag;
+    }
+
+    div.wrapper {
+        height: calc(100% - var(--header-height) - var(--footer-height));
+    }
+
+    div.footer {
+        height: var(--footer-height);
+        border-top: 1px solid var(--color-borderline);
+    }
+
+    div.header, div.wrapper, div.footer {
+        position: relative;
+        top: 0;
+        left: 0;
+        display: flex;
+        width: 100%;
+    }
+}

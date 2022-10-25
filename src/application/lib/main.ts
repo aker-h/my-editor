@@ -1,22 +1,32 @@
 import path from 'path';
 import fs from 'fs';
-import { app, App, BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
+import { app, App, BrowserWindow, BrowserWindowConstructorOptions, ipcMain as IM, IpcMainEvent as IMEvent } from 'electron'
 
 import getOS from 'APP_LIB/get-os';
 import getInitWindowProps from 'APP_LIB/get-init-window-props';
+import MainIpcHandler from 'APP_LIB/main-ipc-handler';
+import Channnel from 'PRE_LIB/ipc-channnel';
 
-class Main {  
+export default class Main {  
     private static readonly URL: string = `file://${__dirname}/../renderer/index.html`;
     private static readonly APP: App = app;
 
+    public static window: BrowserWindow | null = null;
     private static os: NodeJS.Platform | null = null;
-    private static window: BrowserWindow | null = null;
     private static windowProps: BrowserWindowConstructorOptions | null = null;
 
     public static async main (): Promise<void> {
         Main.os = getOS();
         Main.windowProps = getInitWindowProps(Main.os!);
         Main.initApplication();
+        Main.addIpcRecievers();
+    }
+
+    private static addIpcRecievers (): void {
+        const MIHandler: MainIpcHandler = new MainIpcHandler();
+
+        IM.once(Channnel.toMain.POST_READY, MIHandler.onReady.bind(MIHandler));
+        IM.on(Channnel.toMain.TEMP, MIHandler.onTemp)
     }
 
     private static initApplication (): void {

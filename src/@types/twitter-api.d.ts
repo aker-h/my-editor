@@ -16,4 +16,7 @@ interface Theme {
 interface ExApi {
     color: Color;
     theme: Theme;
+    asset: {
+        install(): void
+    }
 }

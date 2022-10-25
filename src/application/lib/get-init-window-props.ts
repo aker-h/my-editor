@@ -6,10 +6,12 @@ export default function getInitWindowProps (OS: NodeJS.Platform): BrowserWindowC
         frame: false,
         resizable: false,
         show: false,
+        width: 300,
+        height: 400,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            preload: path.resolve(__dirname, '..', '..', 'preload', 'preload.js')
+            preload: path.resolve(__dirname, '..', 'preload', 'preload.js')
         },
         minHeight: 49,
         darkTheme: true

@@ -16,7 +16,7 @@
   \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ getInitWindowProps)\n/* harmony export */ });\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! path */ \"path\");\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_0__);\n\r\nfunction getInitWindowProps(OS) {\r\n    const initWindowProps = {\r\n        frame: false,\r\n        resizable: false,\r\n        show: false,\r\n        webPreferences: {\r\n            nodeIntegration: false,\r\n            contextIsolation: true,\r\n            preload: path__WEBPACK_IMPORTED_MODULE_0___default().resolve(__dirname, '..', '..', 'preload', 'preload.js')\r\n        },\r\n        minHeight: 49,\r\n        darkTheme: true\r\n    };\r\n    switch (OS) {\r\n        case 'win32': {\r\n            // initWindowProps.webPreferences!.preload = ''\r\n            break;\r\n        }\r\n    }\r\n    return initWindowProps;\r\n}\r\n\n\n//# sourceURL=webpack://myeditor/./src/application/lib/get-init-window-props.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ getInitWindowProps)\n/* harmony export */ });\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! path */ \"path\");\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_0__);\n\r\nfunction getInitWindowProps(OS) {\r\n    const initWindowProps = {\r\n        frame: false,\r\n        resizable: false,\r\n        show: false,\r\n        width: 300,\r\n        height: 400,\r\n        webPreferences: {\r\n            nodeIntegration: false,\r\n            contextIsolation: true,\r\n            preload: path__WEBPACK_IMPORTED_MODULE_0___default().resolve(__dirname, '..', 'preload', 'preload.js')\r\n        },\r\n        minHeight: 49,\r\n        darkTheme: true\r\n    };\r\n    switch (OS) {\r\n        case 'win32': {\r\n            // initWindowProps.webPreferences!.preload = ''\r\n            break;\r\n        }\r\n    }\r\n    return initWindowProps;\r\n}\r\n\n\n//# sourceURL=webpack://myeditor/./src/application/lib/get-init-window-props.ts?");
 
 /***/ }),
 
@@ -30,13 +30,33 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
-/***/ "./src/application/main.ts":
-/*!*********************************!*\
-  !*** ./src/application/main.ts ***!
-  \*********************************/
+/***/ "./src/application/lib/main-ipc-handler.ts":
+/*!*************************************************!*\
+  !*** ./src/application/lib/main-ipc-handler.ts ***!
+  \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! electron */ \"electron\");\n/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var APP_LIB_get_os__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! APP_LIB/get-os */ \"./src/application/lib/get-os.ts\");\n/* harmony import */ var APP_LIB_get_init_window_props__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! APP_LIB/get-init-window-props */ \"./src/application/lib/get-init-window-props.ts\");\n\r\n\r\n\r\nclass Main {\r\n    static async main() {\r\n        Main.os = (0,APP_LIB_get_os__WEBPACK_IMPORTED_MODULE_1__[\"default\"])();\r\n        Main.windowProps = (0,APP_LIB_get_init_window_props__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(Main.os);\r\n        Main.initApplication();\r\n    }\r\n    static initApplication() {\r\n        const WINDOW_ALL_CLOSED = 'window-all-closed';\r\n        const READY = 'ready';\r\n        const ACTIVATE = 'activate';\r\n        const onWindowAllClosed = () => {\r\n            Main.APP.quit();\r\n        };\r\n        const create = () => {\r\n            Main.window = new electron__WEBPACK_IMPORTED_MODULE_0__.BrowserWindow(Main.windowProps);\r\n            Main.window.loadURL(Main.URL);\r\n            const CLOSED = 'closed';\r\n            const onClosed = () => { Main.window = null; };\r\n            Main.window.on(CLOSED, onClosed.bind(Main));\r\n        };\r\n        const onActivate = () => {\r\n            if (Main.window === null) {\r\n                create();\r\n            }\r\n        };\r\n        Main.APP.on(WINDOW_ALL_CLOSED, onWindowAllClosed.bind(Main));\r\n        Main.APP.on(READY, create.bind(Main));\r\n        Main.APP.on(ACTIVATE, onActivate.bind(Main));\r\n    }\r\n}\r\nMain.URL = `file://${__dirname}/../renderer/index.html`;\r\nMain.APP = electron__WEBPACK_IMPORTED_MODULE_0__.app;\r\nMain.os = null;\r\nMain.window = null;\r\nMain.windowProps = null;\r\nMain.main();\r\n\n\n//# sourceURL=webpack://myeditor/./src/application/main.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ MainIpcHandler)\n/* harmony export */ });\n/* harmony import */ var APP_LIB_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! APP_LIB/main */ \"./src/application/lib/main.ts\");\n\r\nclass MainIpcHandler {\r\n    constructor() { }\r\n    onReady(ev) {\r\n        this.showWindow();\r\n    }\r\n    onTemp(ev, width, height) {\r\n        APP_LIB_main__WEBPACK_IMPORTED_MODULE_0__[\"default\"].window.setSize(width, height);\r\n    }\r\n    showWindow() {\r\n        APP_LIB_main__WEBPACK_IMPORTED_MODULE_0__[\"default\"].window.show();\r\n    }\r\n}\r\n\n\n//# sourceURL=webpack://myeditor/./src/application/lib/main-ipc-handler.ts?");
+
+/***/ }),
+
+/***/ "./src/application/lib/main.ts":
+/*!*************************************!*\
+  !*** ./src/application/lib/main.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Main)\n/* harmony export */ });\n/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! electron */ \"electron\");\n/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var APP_LIB_get_os__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! APP_LIB/get-os */ \"./src/application/lib/get-os.ts\");\n/* harmony import */ var APP_LIB_get_init_window_props__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! APP_LIB/get-init-window-props */ \"./src/application/lib/get-init-window-props.ts\");\n/* harmony import */ var APP_LIB_main_ipc_handler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! APP_LIB/main-ipc-handler */ \"./src/application/lib/main-ipc-handler.ts\");\n/* harmony import */ var PRE_LIB_ipc_channnel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! PRE_LIB/ipc-channnel */ \"./src/preload/lib/ipc-channnel.ts\");\n\r\n\r\n\r\n\r\n\r\nclass Main {\r\n    static async main() {\r\n        Main.os = (0,APP_LIB_get_os__WEBPACK_IMPORTED_MODULE_1__[\"default\"])();\r\n        Main.windowProps = (0,APP_LIB_get_init_window_props__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(Main.os);\r\n        Main.initApplication();\r\n        Main.addIpcRecievers();\r\n    }\r\n    static addIpcRecievers() {\r\n        const MIHandler = new APP_LIB_main_ipc_handler__WEBPACK_IMPORTED_MODULE_3__[\"default\"]();\r\n        electron__WEBPACK_IMPORTED_MODULE_0__.ipcMain.once(PRE_LIB_ipc_channnel__WEBPACK_IMPORTED_MODULE_4__[\"default\"].toMain.POST_READY, MIHandler.onReady.bind(MIHandler));\r\n        electron__WEBPACK_IMPORTED_MODULE_0__.ipcMain.on(PRE_LIB_ipc_channnel__WEBPACK_IMPORTED_MODULE_4__[\"default\"].toMain.TEMP, MIHandler.onTemp);\r\n    }\r\n    static initApplication() {\r\n        const WINDOW_ALL_CLOSED = 'window-all-closed';\r\n        const READY = 'ready';\r\n        const ACTIVATE = 'activate';\r\n        const onWindowAllClosed = () => {\r\n            Main.APP.quit();\r\n        };\r\n        const create = () => {\r\n            Main.window = new electron__WEBPACK_IMPORTED_MODULE_0__.BrowserWindow(Main.windowProps);\r\n            Main.window.loadURL(Main.URL);\r\n            const CLOSED = 'closed';\r\n            const onClosed = () => { Main.window = null; };\r\n            Main.window.on(CLOSED, onClosed.bind(Main));\r\n        };\r\n        const onActivate = () => {\r\n            if (Main.window === null) {\r\n                create();\r\n            }\r\n        };\r\n        Main.APP.on(WINDOW_ALL_CLOSED, onWindowAllClosed.bind(Main));\r\n        Main.APP.on(READY, create.bind(Main));\r\n        Main.APP.on(ACTIVATE, onActivate.bind(Main));\r\n    }\r\n}\r\nMain.URL = `file://${__dirname}/../renderer/index.html`;\r\nMain.APP = electron__WEBPACK_IMPORTED_MODULE_0__.app;\r\nMain.window = null;\r\nMain.os = null;\r\nMain.windowProps = null;\r\nMain.main();\r\n\n\n//# sourceURL=webpack://myeditor/./src/application/lib/main.ts?");
+
+/***/ }),
+
+/***/ "./src/preload/lib/ipc-channnel.ts":
+/*!*****************************************!*\
+  !*** ./src/preload/lib/ipc-channnel.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({\r\n    toMain: {\r\n        POST_READY: 'POST_READY',\r\n        TEMP: 'TEMP'\r\n    },\r\n    toRenderer: {}\r\n});\r\n\n\n//# sourceURL=webpack://myeditor/./src/preload/lib/ipc-channnel.ts?");
 
 /***/ }),
 
@@ -131,8 +151,8 @@ module.exports = require("path");
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/application/main.ts");
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/application/lib/main.ts");
 /******/ 	
 /******/ })()
 ;

@@ -1,5 +1,9 @@
 import Dummy from 'LIB/dummy';
+import IpcApi from 'SRC/preload/lib/ipc-api';
 
-interface Window {
-    exApi: ExApi
+declare global {
+    interface Window {
+        exApi: ExApi,
+        ipc: IpcApi
+    }
 }

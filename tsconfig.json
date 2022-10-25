@@ -12,12 +12,13 @@
 	  "baseUrl": "./",                   /* Base directory to resolve non-absolute module names. */
 	  "paths": {
 		  "SRC/*": ["./src/*"],
-		  "APP/*": ["./src/applicatino/*"],
+		  "APP/*": ["./src/application/*"],
 		  "APP_LIB/*": ["./src/application/lib/*"],
 		  "PRELOAD/*": ["./src/preload/*"],
 		  "PRE_LIB/*": ["./src/preload/lib/*"],
 		  "RENDERER/*": ["./src/renderer/*"],
 		  "REN_LIB/*": ["./src/renderer/lib/*"],
+		  "COMPONENTS/*": ["./src/renderer/lib/components/*"],
  		  "LIB/*": ["./src/lib/*"] 
 	  },    
 	  "moduleResolution": "Node",
