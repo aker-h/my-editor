@@ -1,3 +1,5 @@
+import { SetStateAction } from 'react';
+
 import Dummy from 'LIB/dummy';
 import IpcApi from 'SRC/preload/lib/ipc-api';
 

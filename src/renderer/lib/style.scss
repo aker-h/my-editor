@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css");
+
 div.react-outer {
     position: absolute;
     top: 0;
@@ -6,7 +8,7 @@ div.react-outer {
     width: 100%;
     height: 100%;
 
-    div.loading {
+    & > div.loading {
         position: absolute;
         top: 0;
         left: 0;
@@ -15,7 +17,7 @@ div.react-outer {
         height: 100%;
         -webkit-app-region: drag;
 
-        div.loading-animation {
+        & >div.loading-animation {
             position: absolute;
             top: 30%;
             left: 50%;
@@ -24,7 +26,7 @@ div.react-outer {
             width: 64px;
             height: 64px;
 
-            div.spinner-border {
+            & >div.spinner-border {
                 --size: 64px;
                 width: var(--size);
                 height: var(--size);
@@ -32,7 +34,7 @@ div.react-outer {
             }
         }
 
-        div.status-text {
+        & > div.status-text {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -42,26 +44,125 @@ div.react-outer {
         }
     }
 
-    div.header {
+    & > div.header {
         height: var(--header-height);
-        border-bottom: 1px solid var(--color-borderline);
-        -webkit-app-region: drag;
+        border-bottom: 1px solid var(--color-borderline);       
+
+        --width--navi-btn: 48px;
+
+        & > div {
+            position: relative;
+            top: 0;
+            left: 0;
+            display: inline-block;
+        }
+
+        & > div.header-inner {
+            width: calc(100% - var(--width--navi-btn) - var(--width--navi-btn) - var(--width--navi-btn));
+            height: 100%;
+            -webkit-app-region: drag;
+        }
+
+        & > div.navigate-buttons {
+            width: fit-content;
+            height: 100%;
+
+            & > div.navi-btn {
+                position: relative;
+                top: 0;
+                left: 0;
+                display: inline-block;
+                width: var(--width--navi-btn);
+                height: 100%;
+
+                & > svg {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: var(--color-text-gray);
+
+                    &:hover {
+                        color: var(--color-text-main);
+                    }
+                }
+
+                &.minimize > svg {
+                    top: 67%;
+                }
+
+                &.navi-btn.maximize svg {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                &.minimize, &.maximize {
+                    &:hover {
+                        background-color: var(--highlight-item);
+                    }
+                }
+
+                &.close:hover {
+                    background-color: var(--t-red);
+                }                
+            }
+        }
     }
 
-    div.wrapper {
+    & > div.wrapper {
         height: calc(100% - var(--header-height) - var(--footer-height));
+
+        & > div {
+            position: relative;
+            top: 0;
+            left: 0;
+            display: inline-block;
+            height: 100%
+        }
+
+        & > div.contents {
+            width: 100%;
+
+            & > div {
+                position: relative;
+                top: 0;
+                left: 0;
+                display: block;
+                width: 100%;
+            }
+
+            & > div.tab-labels-outer {
+                height: var(--height-tab);
+                border-bottom: 1px solid var(--color-borderline);
+                background-color: var(--bg-overlay);
+            }
+
+            & > div.panes-outer {
+                height: calc(100% - var(--height-tab));
+            }
+        }
     }
 
-    div.footer {
+    & > div.footer {
         height: var(--footer-height);
         border-top: 1px solid var(--color-borderline);
     }
 
-    div.header, div.wrapper, div.footer {
+    & > div.header, & > div.wrapper, & > div.footer {
         position: relative;
         top: 0;
         left: 0;
         display: flex;
         width: 100%;
+    }
+}
+
+body.fullscreen > div.react-outer {
+    & > div.header {
+        display: none;
+    }
+
+    & > div.wrapper {
+        height: calc(100% - var(--footer-height));
     }
 }

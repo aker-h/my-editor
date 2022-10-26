@@ -40,7 +40,7 @@ const main = {
         }]
     },
     resolve: {
-        extensions: [ '.ts' ],
+        extensions: [ '.js' , '.ts' ],
         alias: ALIAS
     }
 };
