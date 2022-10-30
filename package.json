@@ -10,7 +10,7 @@
 
     "debug-linux": "npm run build-linux && npm run start-linux",
     "build-linux": "npm-run-all -s build-uni:* && npm run build-linux--e-packager",
-    "start-linux": ".\\my-editor-win32-x64\\my-editor.exe",
+    "start-linux": "./my-editor-linux-x64/my-editor",
     
     "build-uni": "npm-run-all -s build-uni:*",
     "build-uni:node-sass": "node-sass src/renderer/lib/ --output src/renderer/ --output-style compressed",
