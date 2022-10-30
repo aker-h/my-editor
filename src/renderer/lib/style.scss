@@ -40,12 +40,11 @@ div.react-outer {
             left: 50%;
             transform: translate(-50%, -50%);
             display: block;
-            font-size: 20px;
         }
     }
 
     & > div.header {
-        height: var(--header-height);
+        height: var(--height-header);
         border-bottom: 1px solid var(--color-borderline);       
 
         --width--navi-btn: 48px;
@@ -81,10 +80,10 @@ div.react-outer {
                     left: 50%;
                     transform: translate(-50%, -50%);
                     color: var(--color-text-gray);
+                }
 
-                    &:hover {
-                        color: var(--color-text-main);
-                    }
+                &:hover > svg {
+                    color: var(--color-text-main);
                 }
 
                 &.minimize > svg {
@@ -110,7 +109,7 @@ div.react-outer {
     }
 
     & > div.wrapper {
-        height: calc(100% - var(--header-height) - var(--footer-height));
+        height: calc(100% - var(--height-header) - var(--height-footer));
 
         & > div {
             position: relative;
@@ -127,24 +126,252 @@ div.react-outer {
                 position: relative;
                 top: 0;
                 left: 0;
-                display: block;
+                display: flex;
                 width: 100%;
             }
 
-            & > div.tab-labels-outer {
+            & > div.tab-bar {
+                position: relative;
+                top: 0;
+                left: 0;
+                width: 100%;
                 height: var(--height-tab);
                 border-bottom: 1px solid var(--color-borderline);
-                background-color: var(--bg-overlay);
+                font-size: 0;
+
+                & > div {
+                    position: relative;
+                    top: 0;
+                    left: 0;                    
+                    height: var(--height-tab);
+
+                    --min-width-blank-right: 50px;
+
+                    &.tab-labels-outer {
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        display: inline-block;
+                        width: fit-content;
+                        height: var(--height-tab);
+                        white-space: nowrap;
+                        overflow-x: overlay;
+                        
+
+                        & > div.tab-label {
+                            position: relative;
+                            top: 0;
+                            left: 0;
+                            display: inline-block;
+                            width: calc(var(--height-tab) * 5);
+                            border-width: 0 0.5px;
+                            border-style: solid;
+                            border-color: var(--color-borderline);
+                            -webkit-user-drag: Element;
+
+                            & > div {
+                                position: relative;
+                                top: 0;
+                                left: 0;
+                                display: inline-block;
+                                height: var(--height-tab);
+                                vertical-align: top;
+
+                                &.filename-controler {
+                                    width: 98px;
+
+                                    & > input.filename-editor {
+                                        display: none;
+                                    }
+
+                                    & > div.filename-label {
+                                        display: block;
+
+                                        & > div.filename-label-inner {
+                                            position: absolute;
+                                            top: 50%;
+                                            left: 0;
+                                            transform: translate(0, -50%);
+                                        }
+                                    }
+
+                                    &.edit {
+                                        & > input.filename-editor {
+                                            display: block;
+                                            border-width: 0;
+                                            background: var(--bg-input);
+                                        }
+
+                                        & > div.filename-label {
+                                            display: none;
+                                        }
+                                    }
+
+                                    & > input.filename-editor,
+                                    & > div.filename-label {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        padding: 0;
+                                        font-size: 16px;
+                                        color: var(--color-text-main);
+                                    }
+                                }
+
+                                &.file-icon-outer {
+                                    width: 30px;
+
+                                    & > i.file-icon {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        font-size: 18px;
+                                    }
+                                }                                
+
+                                &.tab-close-btn-outer {
+                                    width: 30px;
+
+                                    & > div.tab-close-btn-inner {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        display: block;
+                                        width: 20px;
+                                        height: 20px;
+                                        border-radius: 10px;
+                                        // background: red;
+
+                                        & > i {
+                                            position: absolute;
+                                            top: 55%;
+                                            left: 51%;
+                                            transform: translate(-50%, -50%);
+                                            display: block;
+                                            font-size: 20px;
+                                            color: transparent
+                                        }
+
+                                        &:hover {
+                                            background-color: rgba(0, 0, 0, 0.4);
+                                        }
+                                    }
+                                }
+                            }
+
+                            &:hover > div.tab-close-btn-outer > div.tab-close-btn-inner > i {
+                                color: var(--color-text-main);                                
+                            }
+                        }
+
+                        &::-webkit-scrollbar {
+                            display: block;
+                            width: 4px;
+                            height: 4px;
+                        }
+
+                        &::-webkit-scrollbar-thumb {
+                            background-color: var(--color-primary);
+                            opacity: 0.5;
+                        }
+
+                        &::-webkit-scrollbar-track {
+                            background-color: transparent;
+                        }
+                    }
+
+                    &.tab-bar-blank {
+                        
+                        background: rgba(0, 0, 0, 0.2);
+                        border-width: 0;
+                        border-style: solid;
+                        border-color: var(--color-borderline);
+
+                        &.left {
+                            display: inline-block;
+                            width: var(--height-tab);
+                            min-width: var(--height-tab);
+                            border-right-width: 0.5px;
+                        }
+
+                        &.right {
+                            display: inline-block;
+                            width: calc(100% - var(--height-tab) - var(--width-tab-labels-outer));
+                            min-width: fit-content;
+                            border-left-width: 0.5px;
+                            padding-right: 8px;
+
+                            & > div.create-tab-button-outer {
+                                position: relative;
+                                top: 0;
+                                left: 0;
+                                margin-left: 8px;
+                                display: inline-block;
+                                width: 20px;
+                                height: 100%;
+
+                                & > div.create-tab-button-inner {
+                                    position: absolute;
+                                    top: 39%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    display: block;
+                                    width: 18px;
+                                    height: 18px;
+
+                                    & > i {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        display: block;
+                                        width: 18px;
+                                        height: 18px;
+                                        font-size: 18px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             & > div.panes-outer {
-                height: calc(100% - var(--height-tab));
+                height: calc(100% - var(--height-tab));                
+                overflow: hidden;
+                border-width: 0.5px 0 0.5px 0;
+                border-style: solid;
+                border-color: var(--color-borderline);
+
+                & > div.pane {
+                    position: relative;
+                    top: 0;
+                    left: 0;
+                    display: inline-flex;
+                    width: 100%;
+                    height: 100%;
+                    border-width: 0 0.5px;
+                    border-style: solid;
+                    border-color: var(--color-borderline);
+                    // box-shadow: rgba(0, 0, 0, 0.2) inset 8px 8px 8px;
+
+                    &:first-child {
+                        border-left-width: 0;
+                    }
+
+                    &:last-child {
+                        border-right-width: 0;
+                    }
+                }
             }
         }
     }
 
     & > div.footer {
-        height: var(--footer-height);
+        height: var(--height-footer);
         border-top: 1px solid var(--color-borderline);
     }
 
@@ -155,6 +382,10 @@ div.react-outer {
         display: flex;
         width: 100%;
     }
+
+    & > div.style-variables {
+        display: none;
+    }
 }
 
 body.fullscreen > div.react-outer {
@@ -163,6 +394,120 @@ body.fullscreen > div.react-outer {
     }
 
     & > div.wrapper {
-        height: calc(100% - var(--footer-height));
+        height: calc(100% - var(--height-footer));
+    }
+}
+
+div.panes-outer > div.pane{
+    &.text {
+        overflow-y: hidden;
+
+        & > div.pane-text--inner {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: calc(100% - 32px);
+            height: calc(100% - 16px);
+
+            & > div.pane-text-wrapper {
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: flex;
+                width: 100%;
+                height: 100%;
+
+                & > div {
+                    position: relative;
+                    top: 0;
+
+                    &.line-numbers--outer {
+                        left: 0;
+                        display: inline-flex;
+                        width: var(--width-linenumbers);
+                        height: var(--height);
+                        border-right: 1px solid var(--color-borderline);
+                        flex-flow: column;
+                        box-shadow: rgba(0, 0, 0, 0.2) 16px 0 8px -8px;
+
+                        & > div.line-number--outer {
+                            position: relative;
+                            top: 0;
+                            left: 0;
+                            display: flex;
+                            width: 100%;
+                            height: 100%;
+
+                            & > .line-number--inner {
+                                position: absolute;
+                                top: 50%;
+                                right: 8px;
+                                display: block;
+                                transform: translate(0, -50%);
+                                font-size: calc(var(--size) * 0.8);
+                                color: var(--color-text-gray);
+                                user-select: none;
+                            }
+
+                            &.active > div.line-number--inner {
+                                color: var(--color-text-main);
+                            }
+                        }
+                    }
+
+                    &.editor-outer {
+                        left: 16px;
+                        display: inline-flex;
+                        width: calc(100% - 64px);
+                        height: 100%;
+                        overflow-x: overlay;
+
+                        & > div.editor-inner {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            display: block;
+                            min-width: 100%;
+                            width: fit-content;
+
+                            & > .edit-unit {
+                                font-family: 'JetBrains Mono';
+                                font-size: 20px;
+
+                                &.edit-area {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    height: 100%;
+                                    padding: 0;
+                                    resize: none;
+                                    border-width: 0;
+                                    background: transparent;
+                                    color: transparent;
+                                    white-space: nowrap;
+                                    caret-color: var(--color-text-main);
+                                }
+                            }
+                        }
+
+                        &::-webkit-scrollbar {
+                            width: 8px;
+                            height: 8px;
+                        }
+
+                        &::-webkit-scrollbar-thumb {
+                            border-radius: 4px;
+                            background-color: var(--highlight-item);
+                        }
+
+                        &::-webkit-scrollbar-track {
+                            background-color: transparent;
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }

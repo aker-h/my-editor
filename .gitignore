@@ -1,3 +1,4 @@
 node_modules/**
+src/application/lib/extensions/**
 
 **win32-x64

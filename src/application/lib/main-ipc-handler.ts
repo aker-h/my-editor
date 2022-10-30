@@ -1,7 +1,7 @@
 import {  BrowserWindow, IpcMainEvent as IMEvent, IpcMainInvokeEvent as IMInvokeEvent } from 'electron';
+import installExtension , { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 
 import log from 'LIB/log';
-import Main from 'APP_LIB/main';
 import WindowControler from 'APP_LIB/window-controler';
 
 export default class MainIpcHandler {
@@ -34,16 +34,20 @@ export default class MainIpcHandler {
     public onPostReady (ev: IMEvent) {
         this.windowControler.applyInitWindowSize();
         this.windowControler.enableResize();
-        this.windowControler.observe();
+        this.windowControler.observe();        
     }
 
     public onPostShow (ev: IMEvent) {
         this.window!.show();
         this.window!.webContents.openDevTools();
-        this.windowControler.setWindow(this.window!);
+        this.windowControler.setWindow(this.window!);        
         log.event('Appeard Window.')
     }
 
+    public onRequestExtensions (ev: IMEvent) {
+        this.loadExtensionReactDevelopers();
+    }
+ 
     public onTemp (ev: IMEvent, width: number, height: number) {
         this.window!.setSize(width, height);
     }
@@ -55,5 +59,11 @@ export default class MainIpcHandler {
     public setWindow (browserWindow: BrowserWindow) {
         log.event('BrowserWindow have set to MainIpcHandler.');
         this.window = browserWindow;
+    }
+
+    private loadExtensionReactDevelopers (): void {
+        installExtension([REACT_DEVELOPER_TOOLS]).then((hoge) => {
+            log.event(hoge);
+        });
     }
 }

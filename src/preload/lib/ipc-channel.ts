@@ -3,7 +3,8 @@ export default {
         TEMP: 'TEMP',
         boot: {
             POST_READY: 'POST_READY',
-            POST_SHOW: 'POST_SHOW'
+            POST_SHOW: 'POST_SHOW',
+            REQUEST_EXTENSIONS: 'REQUEST_EXTENSIONS'
         },
         window: {
             INIT_SIZE: 'INIT_SIZE',

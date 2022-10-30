@@ -2,7 +2,7 @@ import { BrowserWindow } from 'electron';
 import Store from 'electron-store';
 
 import log from 'LIB/log';
-import Channel from 'PRE_LIB/ipc-channnel';
+import Channel from 'SRC/preload/lib/ipc-channel';
 
 const store: Store = new Store();
 

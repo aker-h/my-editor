@@ -2,10 +2,12 @@ import { contextBridge, ipcRenderer, ipcRenderer as IR, IpcRendererEvent as IREv
 
 import P from 'LIB/promise';
 import R from 'LIB/resource';
-import Channel from 'PRE_LIB/ipc-channnel';
+import Channel from 'PRE_LIB/ipc-channel';
 
 export default class IpcApi {
     public static readonly API_KEY = 'ipc';
+    private static _channels: string[] = [];
+    private readonly _LOG_DEBUG: boolean = true;
     
     constructor () {}
 
@@ -27,6 +29,10 @@ export default class IpcApi {
                 this._postedShow = true;
             }
         } 
+
+        public requestExtensions = (): void => {
+            IR.send(this._CHANNEL.REQUEST_EXTENSIONS);
+        }
     }();
 
     public window = new class Window {
@@ -51,39 +57,78 @@ export default class IpcApi {
         public requestInitWinSize = async (): Promise<void> => {
             await IR.invoke(this._CHANNEL.INIT_SIZE);
     
-            this._setStatusText('initializing window size.');
+            this._setStatusText('initializing window size.', 14);
             P.VOID;
         }
 
-        private _setStatusText (statusText: string): void {
+        private _setStatusText (statusText: string, fontSize: number = 20): void {
             document.dispatchEvent(new CustomEvent(R.eventType.SET_STATUS_TEXT, {
-                detail: { statusText: statusText }
+                detail: { statusText: statusText, fontSize: fontSize }
             }));
         }
     }();
 
-    public off = (channel: string, callbak: Function) => {
-        IR.off(channel, (event: IREvent, args: any) => {
-            callbak(event, args);
-        });
-    }
-
-    public on = (channnel: string, callback: Function) => {
-        IR.on(channnel, (event: IREvent, args: any) => {
+    public on = (channel: string, callback: (...args: any[]) => void) => {
+        IR.addListener(channel, (event: IREvent, args: any) => {
             callback(event, args);
         });
+
+        IpcApi._channels.push(channel);
+        this._debugLog('on', channel);
     }
 
-    public once = (channnel: string, callback: Function) => {
-        IR.once(channnel, (event: IREvent, args: any) => {
-            callback(event, args);
-        });
-    }
+    public removeAllListeners = (channel: string): void => {
+        IR.removeAllListeners(channel);
+
+        IpcApi._channels.splice(IpcApi._channels.indexOf((channel)), 1);
+        this._debugLog('off', channel);
+    };
 
     public temp = (width: number, height: number): void => {
         //main-ipc-handle.ts
         IR.send(Channel.toMain.TEMP, width, height);
-    }  
+    }
+    
+    private _debugLog = (action: string, channel: string) => {
+        if (this._LOG_DEBUG === false) return; 
+
+        const WIDTH: number = 30;
+
+        const makeBoarder = (topOrBottm: 'top' | 'bottom') => {
+            switch (topOrBottm) {
+                case 'top': {
+                    return '┌ACTIVE_LISTENERS──────────────┐\n';
+                }
+                case 'bottom': {
+                    return '└──────────────────────────────┘\n'
+                }
+            }
+        };
+
+        const makeBlank = (channelLength: number): string => {
+            let blank = '';
+
+            const blankLength: number = WIDTH - channelLength;
+
+            for (let i = 0; i < blankLength; i++) {
+                blank += ' ';
+            }
+
+            return blank;
+        };
+
+        const rows: string = ((): string => {
+            let result = '';
+            IpcApi._channels.map((channel) => {
+                result += `│${channel}${makeBlank(channel.length)}|\n`;
+            }); 
+            return result;
+        })();
+
+        const table: string = `${makeBoarder('top')}${rows}${makeBoarder('bottom')}`;
+
+        console.log(`${table}${action}: ${channel}`);
+    };
 }
 
 (() => {

@@ -6,7 +6,7 @@ import log from 'LIB/log';
 import getOS from 'APP_LIB/get-os';
 import getInitWindowProps from 'APP_LIB/get-init-window-props';
 import MainIpcHandler from 'APP_LIB/main-ipc-handler';
-import Channel from 'PRE_LIB/ipc-channnel';
+import Channel from 'SRC/preload/lib/ipc-channel';
 
 export default class Main {  
     private static readonly URL: string = `file://${__dirname}/../renderer/index.html`;
@@ -41,6 +41,7 @@ export default class Main {
         IM.on(boot.POST_SHOW, Main.MIHandler.onPostShow.bind(Main.MIHandler));
         IM.handle(window.INIT_SIZE, Main.MIHandler.onInitWindowSize.bind(Main.MIHandler));
         IM.on(boot.POST_READY, Main.MIHandler.onPostReady.bind(Main.MIHandler));
+        IM.on(boot.REQUEST_EXTENSIONS, Main.MIHandler.onRequestExtensions.bind(Main.MIHandler));
 
         IM.on(window.POST_CLOSE, Main.MIHandler.onClose.bind(Main.MIHandler));
         IM.on(window.POST_MAXIMIZE, Main.MIHandler.onMaximize.bind(Main.MIHandler));
@@ -90,6 +91,8 @@ export default class Main {
         Main.APP.on(READY, create.bind(Main));
         Main.APP.on(ACTIVATE, onActivate.bind(Main));
     }
+
+    private static loadReactDeveloperExt (): void {}
 }
 
 Main.main();
