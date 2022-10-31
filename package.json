@@ -7,15 +7,12 @@
     "debug-win": "npm run build-win && npm run start-win",
     "build-win": "npm-run-all -s build-uni:* && npm run build-win--e-packager",
     "start-win": ".\\my-editor-win32-x64\\my-editor.exe",
-
     "debug-linux": "npm run build-linux && npm run start-linux",
     "build-linux": "npm-run-all -s build-uni:* && npm run build-linux--e-packager",
     "start-linux": "./my-editor-linux-x64/my-editor",
-    
     "build-uni": "npm-run-all -s build-uni:*",
     "build-uni:node-sass": "node-sass src/renderer/lib/ --output src/renderer/ --output-style compressed",
     "build-uni:webpack": "webpack --mode development",
-
     "build-win--e-packager": "electron-packager src my-editor --platform=win32 --arch=x64 --overwrite",
     "build-linux--e-packager": "electron-packager src my-editor --platform=linux --arch=x64 --overwrite"
   },
@@ -39,6 +36,8 @@
     "node-sass": "^7.0.3",
     "npm-run-all": "^4.1.5",
     "react": "^18.2.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "ts-loader": "^9.4.1",
     "typescript": "^4.8.4",

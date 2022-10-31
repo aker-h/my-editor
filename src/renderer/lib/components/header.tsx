@@ -1,4 +1,6 @@
-import React, { MutableRefObject, useRef, MouseEvent } from 'react';
+import React, { MutableRefObject, useRef, MouseEvent, useEffect } from 'react';
+
+import log from 'LIB/log';
 
 const Header = (props: HeaderProps): JSX.Element => {
     const minbh = new class MinimizeButtonHandler {
@@ -45,6 +47,10 @@ const Header = (props: HeaderProps): JSX.Element => {
             window.ipc.window.postClose();
         }
     }();
+
+    useEffect(() => {
+        log.event('Header have been rendered.')
+    });
 
     return <div className='header'>
         <div className='header-inner'></div>

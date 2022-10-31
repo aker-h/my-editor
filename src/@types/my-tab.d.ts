@@ -7,7 +7,7 @@ interface MyTab {
     tabIndex: number
     
     closeTab? (): void;
-    fromMyTab? (myTab: MyTab): void
+    fromMyTab? (myTab: MyTab): MyTab
     updateData? (data: string): void;
     updateFileName? (fileName: string): void;
     setFileName? (filename: string): void;

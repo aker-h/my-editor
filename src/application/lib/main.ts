@@ -69,7 +69,7 @@ export default class Main {
             Main.MIHandler.setWindow(browserWindow);
             
             Main.window.loadURL(Main.URL);
-            log.event(`Called BrowserWindow. URL(${Main.URL})`);
+            log.event(`Called BrowserWindow.\n-------------------URL(${Main.URL})`);
 
             const CLOSED = 'closed';
 

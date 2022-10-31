@@ -1,4 +1,6 @@
 import React, { FC, useRef, MutableRefObject, MouseEvent, useEffect } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import TabLabel, { DebugInterface } from 'COMPONENTS/tab-label';
 import PaneText from 'COMPONENTS/pane/pane-text';
@@ -10,17 +12,19 @@ const Contents: FC<ContentsProps> = (props: ContentsProps) => {
 
     return <div className="contents">
         <TabBar tc={props.tc}>
-            <TabLabelsOuter><>{
-                tabs.map((tab) => {
-                    return <TabLabel 
-                        key={`tab-${tab.key}`}
-                        fileName={tab.fileName}
-                        type={tab.type}
-                        closeTab={tab.closeTab!.bind(tab)}
-                        updateFileName={tab.updateFileName!.bind(tab)}
-                    />
-                })
-            }</></TabLabelsOuter>
+            <DndProvider backend={HTML5Backend}>
+                <TabLabelsOuter><>{
+                    tabs.map((tab) => {
+                        return <TabLabel 
+                                key={`tab-${tab.key}`}
+                                fileName={tab.fileName}
+                                type={tab.type}
+                                closeTab={tab.closeTab!.bind(tab)}
+                                updateFileName={tab.updateFileName!.bind(tab)}
+                        />            
+                    })
+                }</></TabLabelsOuter>
+            </DndProvider>
         </TabBar>        
         <PanesOuter><>{
             tabs.map((tab) => {

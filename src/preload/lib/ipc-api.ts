@@ -7,7 +7,7 @@ import Channel from 'PRE_LIB/ipc-channel';
 export default class IpcApi {
     public static readonly API_KEY = 'ipc';
     private static _channels: string[] = [];
-    private readonly _LOG_DEBUG: boolean = true;
+    private readonly _LOG_DEBUG: boolean = false;
     
     constructor () {}
 

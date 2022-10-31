@@ -13,7 +13,7 @@ import StyleVariables from 'COMPONENTS/style-variables';
 const MyEditor = (p: MyEditorProps): JSX.Element => {
     createContext(Context);
     const [tabs, setTabs] = useState([] as MyTab[]);
-    const [completedLoad, setCompletedLoad] = useState(false);    
+    const [completedLoad, setCompletedLoad] = useState(false);
 
     const onCompleteLoad = (ev: Event) => {
         setCompletedLoad(true);
@@ -118,13 +118,14 @@ const MyEditor = (p: MyEditorProps): JSX.Element => {
             tc.closeTab(this);
         }
 
-        public fromMyTab(myTab: MyTab): void {
+        public fromMyTab(myTab: MyTab): Tab {
             this.key = myTab.key;
             this.path = myTab.path;
             this.fileName = myTab.fileName;
             this.type = myTab.type;
             this.data = myTab.data;
             this.tabIndex = myTab.tabIndex;
+            return this;
         }
 
         public updateData (data: string): void {
@@ -220,7 +221,7 @@ const MyEditor = (p: MyEditorProps): JSX.Element => {
     return <Context.Provider value={{}}>
         <Header key='header'/>
         <Wrapper key='wrapper' tabs={tabs} tc={tc} toTabs={toTabs}/>
-        <Footer key='footer'/>      
+        <Footer key='footer'/>   
         <StyleVariables />
     </Context.Provider>
 }

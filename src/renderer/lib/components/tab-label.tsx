@@ -1,13 +1,26 @@
-import React, { useEffect, useRef, MutableRefObject, RefObject, MouseEvent, FocusEvent, KeyboardEvent } from 'react';
+import { type } from 'jquery';
+import React, { useRef, MutableRefObject, RefObject, MouseEvent, FocusEvent, KeyboardEvent, DragEvent } from 'react';
+import { useDrag } from 'react-dnd';
 import useDoubleClick from 'use-double-click';
 
 let applyeFileName = (filename: string): void => {};
 
 const TabLabel = (props: TabLabelProps): JSX.Element => {
+    const [collected, refTl, dragPreview] = useDrag({
+        type: 'hoge',
+        item: {}
+    });
     const refFch = useRef() as MutableRefObject<HTMLDivElement>;
     const refFeh = useRef() as RefObject<HTMLInputElement>;
     const refFlh = useRef() as MutableRefObject<HTMLDivElement>;
     // const refCbh = useRef() as MutableRefObject<HTMLDivElement>;
+
+    class TabLabelHandler {
+        constructor () {}
+
+        public onDragStart (ev: DragEvent<HTMLDivElement>): void {
+        }
+    }
 
     class FileControlerHandler {
         private readonly _EDIT: string = 'edit';
@@ -112,7 +125,8 @@ const TabLabel = (props: TabLabelProps): JSX.Element => {
     applyeFileName = (filename: string): void => {
         props.updateFileName(filename);
     };
-
+    
+    const tlh = new TabLabelHandler();
     const fch = new FileControlerHandler();
     const feh = new FilenameEditorHandler();
     const flh = new FileNameLabelHandler();
@@ -123,14 +137,14 @@ const TabLabel = (props: TabLabelProps): JSX.Element => {
         onDoubleClick: flh.onDoubleClick
     });    
 
-    return <div className='tab-label'>
+    return <div className='tab-label' ref={refTl} onDragStart={tlh.onDragStart.bind(tlh)}>
         <div className='file-icon-outer'>
             <i className={`${iconsClassName} file-icon`}/>
         </div>        
         <div className='filename-controler' ref={refFch}>
             <input className='filename-editor'
                 ref={refFeh}
-                onBlur={feh.onBlur}
+                onBlur={feh.onBlur.bind(feh)}
                 onKeyPress={feh.onKeypress.bind(feh)}
                 defaultValue={props.fileName}
             />
@@ -152,7 +166,7 @@ interface TabLabelProps {
     fileName: string,
     type: MyTabType,
     closeTab (): void
-    updateFileName (filename: string): void,
+    updateFileName (filename: string): void
 }
 
 export default TabLabel;
