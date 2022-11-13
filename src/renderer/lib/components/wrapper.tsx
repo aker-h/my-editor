@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Contents from 'COMPONENTS/contents';
+import Sidebar from 'COMPONENTS/sidebar';
 
 const Wrapper = (props: WrapperProps): JSX.Element => {
     const tabs: MyTab[] = props.toTabs(props.tabs).sort((a, b) => {
@@ -10,6 +11,7 @@ const Wrapper = (props: WrapperProps): JSX.Element => {
     });
 
     return <div className='wrapper'>
+        <Sidebar />
         <Contents tabs={tabs} tc={props.tc}/>
     </div>
 }

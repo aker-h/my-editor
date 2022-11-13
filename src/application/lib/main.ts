@@ -8,6 +8,8 @@ import getInitWindowProps from 'APP_LIB/get-init-window-props';
 import MainIpcHandler from 'APP_LIB/main-ipc-handler';
 import Channel from 'SRC/preload/lib/ipc-channel';
 
+const MIHandler: MainIpcHandler = new MainIpcHandler();
+
 export default class Main {  
     private static readonly URL: string = `file://${__dirname}/../renderer/index.html`;
     private static readonly APP: App = app;
@@ -15,7 +17,6 @@ export default class Main {
     private static window: BrowserWindow | null = null;
     private static os: NodeJS.Platform | null = null;
     private static windowProps: BrowserWindowConstructorOptions | null = null;
-    private static MIHandler: MainIpcHandler = new MainIpcHandler();
 
     public static async main (): Promise<void> {
         log.event('start booting.');
@@ -38,17 +39,17 @@ export default class Main {
         const boot = toMain.boot;
         const window = toMain.window;
 
-        IM.on(boot.POST_SHOW, Main.MIHandler.onPostShow.bind(Main.MIHandler));
-        IM.handle(window.INIT_SIZE, Main.MIHandler.onInitWindowSize.bind(Main.MIHandler));
-        IM.on(boot.POST_READY, Main.MIHandler.onPostReady.bind(Main.MIHandler));
-        IM.on(boot.REQUEST_EXTENSIONS, Main.MIHandler.onRequestExtensions.bind(Main.MIHandler));
+        IM.on(boot.POST_SHOW, MIHandler.onPostShow.bind(MIHandler));
+        IM.handle(window.INIT_SIZE, MIHandler.onInitWindowSize.bind(MIHandler));
+        IM.on(boot.POST_READY, MIHandler.onPostReady.bind(MIHandler));
+        IM.on(boot.REQUEST_EXTENSIONS, MIHandler.onRequestExtensions.bind(MIHandler));
 
-        IM.on(window.POST_CLOSE, Main.MIHandler.onClose.bind(Main.MIHandler));
-        IM.on(window.POST_MAXIMIZE, Main.MIHandler.onMaximize.bind(Main.MIHandler));
-        IM.on(window.POST_MINIMIZE, Main.MIHandler.onMinimize.bind(Main.MIHandler));
-        IM.on(window.POST_UNMAXIMIZE, Main.MIHandler.onUnmaximize.bind(Main.MIHandler));
+        IM.on(window.POST_CLOSE, MIHandler.onClose.bind(MIHandler));
+        IM.on(window.POST_MAXIMIZE, MIHandler.onMaximize.bind(MIHandler));
+        IM.on(window.POST_MINIMIZE, MIHandler.onMinimize.bind(MIHandler));
+        IM.on(window.POST_UNMAXIMIZE, MIHandler.onUnmaximize.bind(MIHandler));
 
-        IM.on(toMain.TEMP, Main.MIHandler.onTemp.bind(Main.MIHandler));
+        IM.on(toMain.TEMP, MIHandler.onTemp.bind(MIHandler));
     }
 
     private static initApplication (): void {
@@ -66,7 +67,7 @@ export default class Main {
         const create = () => {
             const browserWindow: BrowserWindow = new BrowserWindow(Main.windowProps!);
             Main.window = browserWindow;
-            Main.MIHandler.setWindow(browserWindow);
+            MIHandler.setWindow(browserWindow);
             
             Main.window.loadURL(Main.URL);
             log.event(`Called BrowserWindow.\n-------------------URL(${Main.URL})`);
@@ -91,8 +92,6 @@ export default class Main {
         Main.APP.on(READY, create.bind(Main));
         Main.APP.on(ACTIVATE, onActivate.bind(Main));
     }
-
-    private static loadReactDeveloperExt (): void {}
 }
 
 Main.main();
