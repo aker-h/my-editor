@@ -41,6 +41,7 @@ const StyleVariables = (props: StyleVariablesProps): JSX.Element => {
                 --height-tab: ${heightTab}px;
                 --width-tab-labels-outer: ${widthTabLabelsOuter}px;
                 --width-linenumbers: ${widthLineNumbers}px;
+                --width-sidebar: 48px;
             }
         `)}</style>
         <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'></link>

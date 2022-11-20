@@ -212,13 +212,13 @@ const TabLabel = (p: TabLabelProps): JSX.Element => {
             <i className={`${iconsClassName} file-icon`}/>
         </div>        
         <div className='filename-controler' ref={refFch}>
-            <input className='filename-editor'
+            <input className='filename-unit filename-editor'
                 ref={refFeh}
                 onBlur={feh.onBlur.bind(feh)}
                 onKeyPress={feh.onKeypress.bind(feh)}
                 defaultValue={p.fileName}
             />
-            <div className='filename-label'>
+            <div className='filename-unit filename-label'>
                 <div className='filename-label-inner'
                     ref={refFlh}
                 >{p.fileName}</div>

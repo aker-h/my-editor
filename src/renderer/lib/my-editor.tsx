@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { IpcRendererEvent as IREvent } from 'electron';
 
 import R from 'LIB/resource';
+import log from 'LIB/log';
 import Channel from 'SRC/preload/lib/ipc-channel';
 import Context from 'REN_LIB/context'
 import Loading from 'COMPONENTS/loading';
@@ -320,7 +321,10 @@ const MyEditor = (p: MyEditorProps): JSX.Element => {
         }
     };    
 
+    log.event('MyEditor() was called.');
+
     useEffect(() => {
+        log.event('useEffect was called in MyEditor().');
         document.addEventListener(R.eventType.COMPLETE_LOAD, onCompleteLoad);
         WindowHandler.observe();
 
