@@ -11,6 +11,7 @@ interface MyTab {
     updateData? (data: string): void;
     updateFileName? (fileName: string): void;
     setFileName? (filename: string): void;
+    toMyTab?(): MyTab
 }
 
 type MyTabType = 'undefined' | 'txt';

@@ -66,9 +66,19 @@ const MyEditor = (p: MyEditorProps): JSX.Element => {
 
             newTab.fileName = newTab.fileName.replace(`${targetExtension}${targetExtension}`, targetExtension);
 
-            const newTabs: MyTab[] = [...tabs, newTab];
+            const newTabs: MyTab[] = [...window.tabs, newTab];
 
             this._updateTabs(newTabs);
+        }
+
+        public updateFileName(tabKey: string, fileName: string): void {
+            const targetTab: MyTab | null = this._getTabByTabKey(tabKey);
+
+            if (targetTab === null) return;
+
+            targetTab.updateFileName!(fileName);
+
+            this.updateTab(targetTab);
         }
 
         public updateTab(target: MyTab): void {
@@ -87,14 +97,124 @@ const MyEditor = (p: MyEditorProps): JSX.Element => {
             this._updateTabs(newTabs);
         }
 
+        public sortTab(targetTabIndex: number, to: number): void {
+            const isToLeft = (targetTabIndex: number): boolean => {
+                if (to < targetTabIndex) {
+                    return true;
+                }
+                return false;
+            };            
+
+            const isToRight = (targetTabIndex: number): boolean => {
+                if (targetTabIndex < to) {
+                    return true;
+                }
+                return false;
+            };
+
+            const newTabs: MyTab[] = [];
+            const targetTab: MyTab | null = this._getTabByTabIndex(targetTabIndex);
+
+            if (targetTab === null) return;
+
+            const tabs = window.tabs;
+
+            if (isToLeft(targetTabIndex)) {
+                tabs.map((tab: MyTab): void => {
+                    if (tab.tabIndex < to || targetTabIndex < tab.tabIndex) {
+                        newTabs.push(tab);
+                    } else if (tab.tabIndex === to) {
+                        const clonedTarget: MyTab = {
+                            key: targetTab.key,
+                            tabIndex: to,
+                            type: targetTab.type,
+                            path: targetTab.path,
+                            fileName: targetTab.fileName,
+                            data: targetTab.data
+                        };    
+                        newTabs.push(clonedTarget);
+
+                        tab.tabIndex += 1;
+                        newTabs.push(tab);
+                    } else if (to <= tab.tabIndex && tab.tabIndex < targetTabIndex) {
+                        tab.tabIndex++;
+                        newTabs.push(tab);
+                    }
+                });
+                this._updateTabs(newTabs);
+            } else if (isToRight(targetTabIndex)) {
+                tabs.map((tab: MyTab): void => {
+                    if (tab.tabIndex < targetTabIndex) {
+                        newTabs.push (tab);
+                        return;
+                    } else if (tab.tabIndex === targetTabIndex) {
+                        const clonedTarget: MyTab = {
+                            key: targetTab.key,
+                            tabIndex: to,
+                            type: targetTab.type,
+                            path: targetTab.path,
+                            fileName: targetTab.fileName,
+                            data: targetTab.data
+                        };
+                        newTabs.push(clonedTarget);
+                        return;
+                    } else if (targetTabIndex < tab.tabIndex && tab.tabIndex < to) {
+                        tab.tabIndex -= 1;
+                        newTabs.push(tab);
+                        return;
+                    } else if (to <= tab.tabIndex) {
+                        tab.tabIndex += 1;
+                        newTabs.push(tab);
+                        return;
+                    }
+                });
+                this._updateTabs(newTabs);
+            }
+        }
+
+        private _getTabByTabIndex (targetTabIndex: number): MyTab | null {
+            let targetTab: MyTab | null = null;
+
+            window.tabs.map((tab) => {
+                if (tab.tabIndex === targetTabIndex) {
+                    targetTab = tab;
+                }
+            });
+
+            return targetTab;
+        }
+
+        private _getTabByTabKey (targetTabKey: string): MyTab | null {
+            let targetTab: MyTab | null = null;
+
+            const tabs: MyTab[] = window.tabs;
+
+            tabs.map((tab) => {
+                if (tab.key === targetTabKey) {
+                    targetTab = tab;
+                }
+            });
+
+            return targetTab;
+        }
+
         private _updateTabs (newTabs: MyTab[]): void {
-            window.tabs = newTabs;
+            window.tabs = newTabs.sort((a, b) => {
+                if (a.tabIndex < b.tabIndex) return -1;
+                if (a.tabIndex > b.tabIndex) return 1;
+                return 0;
+            });
+
+            tabs.map((tab, i) => {
+                tab.tabIndex = i + 1;
+            });
+
             setTabs(newTabs);
             setToLocalStorage(window.tabs);
         }
     };
 
-    const tc = new TabsControler();
+    window.tc = new TabsControler();
 
     class Tab implements MyTab {
         public key: string='';
@@ -115,7 +235,7 @@ const MyEditor = (p: MyEditorProps): JSX.Element => {
         }
 
         public closeTab (): void {
-            tc.closeTab(this);
+            window.tc.closeTab(this);
         }
 
         public fromMyTab(myTab: MyTab): Tab {
@@ -130,13 +250,24 @@ const MyEditor = (p: MyEditorProps): JSX.Element => {
 
         public updateData (data: string): void {
             this.data = data;
-            tc.updateTab(this);
+            window.tc.updateTab(this);
         }
 
         public updateFileName (fileName: string): void {
             this.fileName = fileName;
             this._updateType(fileName);
-            tc.updateTab(this);
+        }
+
+        public toMyTab(): MyTab {
+            const myTab: MyTab = {
+                key: this.key,
+                path: this.path,
+                fileName: this.fileName,
+                type: this.type,
+                data: this.data,
+                tabIndex: this.tabIndex
+            };
+            return myTab;
         }
 
         private _creatKey (): void {
@@ -201,7 +332,7 @@ const MyEditor = (p: MyEditorProps): JSX.Element => {
 
     if (!completedLoad) {
         return <>
-            <Loading tc={tc}/>
+            <Loading/>
             <StyleVariables />
         </>
     }
@@ -220,7 +351,7 @@ const MyEditor = (p: MyEditorProps): JSX.Element => {
 
     return <Context.Provider value={{}}>
         <Header key='header'/>
-        <Wrapper key='wrapper' tabs={tabs} tc={tc} toTabs={toTabs}/>
+        <Wrapper key='wrapper' tabs={tabs} toTabs={toTabs}/>
         <Footer key='footer'/>   
         <StyleVariables />
     </Context.Provider>

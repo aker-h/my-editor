@@ -57,53 +57,65 @@ div.react-outer {
         }
 
         & > div.header-inner {
-            width: calc(100% - var(--width--navi-btn) - var(--width--navi-btn) - var(--width--navi-btn));
-            height: 100%;
-            -webkit-app-region: drag;
-        }
-
-        & > div.navigate-buttons {
-            width: fit-content;
+            width: 100vw;
             height: 100%;
 
-            & > div.navi-btn {
-                position: relative;
+            & > div {
+                position: absolute;
                 top: 0;
-                left: 0;
                 display: inline-block;
-                width: var(--width--navi-btn);
                 height: 100%;
 
-                & > svg {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    color: var(--color-text-gray);
+                &.header-draggable-area {
+                    left: 0;
+                    width: calc(100% - var(--width--navi-btn) * 3);
+                    -webkit-app-region: drag;
                 }
 
-                &:hover > svg {
-                    color: var(--color-text-main);
-                }
-
-                &.minimize > svg {
-                    top: 67%;
-                }
-
-                &.navi-btn.maximize svg {
-                    width: 14px;
-                    height: 14px;
-                }
-
-                &.minimize, &.maximize {
-                    &:hover {
-                        background-color: var(--highlight-item);
+                &.navigate-buttons {
+                    right: 0;
+                    width: fit-content;
+        
+                    & > div.navi-btn {
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        display: inline-block;
+                        width: var(--width--navi-btn);
+                        height: 100%;
+        
+                        & > svg {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            color: var(--color-text-gray);
+                        }
+        
+                        &:hover > svg {
+                            color: var(--color-text-main);
+                        }
+        
+                        &.minimize > svg {
+                            top: 67%;
+                        }
+        
+                        &.navi-btn.maximize svg {
+                            width: 14px;
+                            height: 14px;
+                        }
+        
+                        &.minimize, &.maximize {
+                            &:hover {
+                                background-color: var(--highlight-item);
+                            }
+                        }
+        
+                        &.close:hover {
+                            background-color: var(--t-red);
+                        }                
                     }
                 }
-
-                &.close:hover {
-                    background-color: var(--t-red);
-                }                
             }
         }
     }
@@ -167,7 +179,7 @@ div.react-outer {
                             border-width: 0 0.5px;
                             border-style: solid;
                             border-color: var(--color-borderline);
-                            // -webkit-user-drag: Element;
+                            -webkit-user-drag: Element;
 
                             & > div {
                                 position: relative;
@@ -265,6 +277,16 @@ div.react-outer {
 
                             &:hover > div.tab-close-btn-outer > div.tab-close-btn-inner > i {
                                 color: var(--color-text-main);                                
+                            }
+
+                            &.drag-over {
+                                &.left {
+                                    border-left: 2px solid var(--color-primary);
+                                }
+
+                                &.right {
+                                    border-right: 2px solid var(--color-primary);
+                                }
                             }
                         }
 
@@ -510,4 +532,9 @@ div.panes-outer > div.pane{
 
         }
     }
+}
+
+* {
+    transform: translate(0, 0);
+    z-index: 0;
 }

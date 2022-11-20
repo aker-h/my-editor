@@ -11,5 +11,7 @@ declare global {
         ipc: IpcApi;
         tabs: MyTab[];
         sApi: StyleApiInterface;
+
+        tc: TabsControllerInterface
     }
 }

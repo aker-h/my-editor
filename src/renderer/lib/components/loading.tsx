@@ -8,7 +8,7 @@ import Boot from 'REN_LIB/boot';
 let booted: boolean = false;
 
 const Loading = (props: LoadingProps): JSX.Element => {
-    const tc = props.tc;
+    const tc = window.tc;
     const [ statusText, setStatusText ] = useState('loading...');
     const [ fontSize, setFontSize] = useState(20);
     window.ipc.boot.postShow();
@@ -87,9 +87,7 @@ async function load (tc: TabsControllerInterface) {
     return P.VOID;
 }
 
-interface LoadingProps {
-    tc: TabsControllerInterface
-}
+interface LoadingProps {}
 
 interface StatusTextProps {
     statusText: string,
