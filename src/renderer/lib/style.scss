@@ -56,57 +56,20 @@ div.react-outer {
             display: inline-block;
         }
 
-<<<<<<< HEAD
         & > div.header-inner {
             width: 100vw;
             height: 100%;
 
             & > div {
                 position: absolute;
-=======
-        & div.header-inner {
-            width: calc(100% - var(--width--navi-btn) - var(--width--navi-btn) - var(--width--navi-btn));
-            height: 100%;
-            -webkit-app-region: drag;
-        }
-
-        & div.navigate-buttons {
-            width: fit-content;
-            height: 100%;
-
-            & div.navi-btn {
-                position: relative;
->>>>>>> 6d626912a923ffdb2377416f969408bfb4f8c457
                 top: 0;
                 display: inline-block;
                 height: 100%;
 
-<<<<<<< HEAD
                 &.header-draggable-area {
                     left: 0;
                     width: calc(100% - var(--width--navi-btn) * 3);
                     -webkit-app-region: drag;
-=======
-                & > svg {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    color: var(--color-text-gray);
-                }
-
-                &:hover svg {
-                    color: var(--color-text-main);
-                }
-
-                &.minimize svg {
-                    top: 67%;
-                }
-
-                &.navi-btn.maximize svg {
-                    width: 14px;
-                    height: 14px;
->>>>>>> 6d626912a923ffdb2377416f969408bfb4f8c457
                 }
 
                 &.navigate-buttons {
@@ -466,7 +429,6 @@ div.wrapper {
                     display: flex;
                     height: var(--height-tab);
                     border-bottom: 1px solid var(--color-borderline);
-                    background-color: rgba(0, 0, 0, 0.2);
 
                     & > div {
                         position: relative;
@@ -475,34 +437,21 @@ div.wrapper {
                         display: inline-flex;
                         height: 100%;
 
-<<<<<<< HEAD
-                        & > div.tab-label {
-                            position: relative;
-                            top: 0;
-                            left: 0;
-                            display: inline-block;
-                            width: calc(var(--height-tab) * 5);
-                            border-width: 0 0.5px;
-                            border-style: solid;
-                            border-color: var(--color-borderline);
-                            -webkit-user-drag: Element;
-
-                            & > div {
-=======
                         &.tab-labels-outer {
-                            width: fit-content;
-
-                            & .tab-label {
->>>>>>> 6d626912a923ffdb2377416f969408bfb4f8c457
+                            & > div.tab-label {
                                 position: relative;
                                 top: 0;
                                 left: 0;
                                 display: inline-flex;
                                 width: fit-content;
                                 min-width: calc(var(--height-tab) * 5);
-                                border-width: 0 1px;
+                                height: 100%;
+                                border-width: 0 1px 0 1px;
                                 border-style: solid;
                                 border-color: var(--color-borderline);
+                                -webkit-user-drag: element;
+                                -webkit-user-select: none;
+                                user-select: none;
 
                                 & > div {
                                     position: relative;
@@ -511,90 +460,116 @@ div.wrapper {
                                     display: inline-flex;
                                     height: 100%;
 
-                                    &.filename-controler {
+                                    &.filename-label {
                                         width: fit-content;
-                                        min-width: auto;
-                                        margin: 0 4px;
+                                        min-width: calc(100% - 48px);
+                                        font-size: 20px;
+                                    }
+    
+                                    &.file-icon-outer {
+                                        margin-left: 4px;
+                                        width: fit-content;
 
-                                        .filename-unit {
+                                        & > i.file-icon {
+                                            position: relative;
+                                            top: 16px;
+                                            left: 0;
+                                            transform: translateY(-50%);
+                                            font-size: 20px;
+                                        }
+                                    }
+                                    
+                                    &.tab-close-btn-outer {
+                                        margin-right: 4px;
+                                        width: fit-content;
+                                        opacity: 0;
+
+                                        & > div.tab-close-btn-inner {
+                                            position: relative;
                                             top: 0;
                                             left: 0;
+                                            display: block;
                                             height: 100%;
-                                            color: var(--color-text-main);
-                                            font-size: 16px;
+                                            width: fit-content;
 
-                                            &.filename-editor {
-                                                position: absolute;
-                                                display: none;
-                                                width: fit-content;
-                                                min-width: 100%;
-                                                border: none;
-                                                padding: 0;
-                                                background: var(--bg-input);
-                                            }
-
-                                            &.filename-label {
+                                            & > i.tab-close-icon {
+                                                position: relative;
+                                                top: 15px;
+                                                left: 0;
+                                                transform: translateY(-50%);
                                                 display: block;
+                                                width: 20px;
+                                                height: 20px;
+                                                border-radius: 10px;
+                                                font-size: 20px;
 
-                                                & .filename-label-inner {
+                                                &::before {
                                                     position: relative;
-                                                    top: 50%;
-                                                    left: 0;
-                                                    transform: translate(0, -50%);
+                                                    top: 6px;
+                                                    left: 0.5px;
+                                                    transform: translateY(-50%);
                                                 }
                                             }
                                         }
+                                    }
+                                }
 
-                                        &.edit .filename-unit {
-                                            &.filename-editor {
-                                                display: block;
-                                            }
+                                & > input.filename-editor {
+                                    position: relative;
+                                    top: 0;
+                                    left: 0;
+                                    display: inline-flex;
+                                    height: 100%;
+                                    width: fit-content;
+                                    min-width: calc(100% - 39px);
+                                    padding: 0;
+                                    background-color: var(--bg-input);
+                                    border: none;
+                                    color: var(--color-text-main);
+                                    font-size: 20px;
+                                }
 
-                                            &.filename-label {
-                                                opacity: 0;
-                                                user-select: none;
-                                                pointer-events: none;
-                                            }
-                                        }
+                                &:hover > div.tab-close-btn-outer {
+                                    opacity: 1;
+
+                                    & > div.tab-close-btn-inner:hover > i.tab-close-icon {
+                                        background-color: var(--t-red-bg);
+                                    }
+                                }
+
+                                &.drag-over {
+                                    --accent: 2px solid var(--color-primary);
+
+                                    &.left {
+                                        border-left: var(--accent);
                                     }
 
-                                    &.file-icon-outer {
-                                        width: fit-content;
-                                        padding-left: 8px;
-                                    }
-
-                                    .tab-close-btn-outer {
-                                        width: fit-content;
-                                        padding-right: 8px;
+                                    &.right {
+                                        border-right: var(--accent);
                                     }
                                 }
                             }
-<<<<<<< HEAD
-
-                            &:hover > div.tab-close-btn-outer > div.tab-close-btn-inner > i {
-                                color: var(--color-text-main);                                
-                            }
-
-                            &.drag-over {
-                                &.left {
-                                    border-left: 2px solid var(--color-primary);
-                                }
-
-                                &.right {
-                                    border-right: 2px solid var(--color-primary);
-                                }
-                            }
-=======
->>>>>>> 6d626912a923ffdb2377416f969408bfb4f8c457
-                        }
+                        }                       
 
                         &.tab-bar-blank {
                             border: 0px solid var(--color-borderline);                            
+                            background-color: rgba(0, 0, 0, 0.2);
 
                             &.right {
-                                width: auto;
+                                width: 100%;
                                 min-width: fit-content;
                                 border-left-width: 1px;
+
+                                & > div.create-tab-button-outer {
+                                    position: relative;
+                                    top: 0;
+                                    left: 0;
+                                    margin-left: 4px;
+                                    display: inline-block;
+                                    width: fit-content;
+                                    height: 100%;
+                                    font-size: 20px;
+                                }
                             }
 
                             &.left {

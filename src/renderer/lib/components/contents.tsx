@@ -1,50 +1,210 @@
-import React, { FC, useRef, MutableRefObject, MouseEvent, useEffect } from 'react';
+import React, { useState, useRef, MutableRefObject, MouseEvent, useEffect } from 'react';
 
+import TabBar from 'COMPONENTS/tab-bar';
 import TabLabel, { DebugInterface } from 'COMPONENTS/tab-label';
 import PaneText from 'COMPONENTS/pane/pane-text';
 
 let booted: boolean = false;
 
-const Contents: FC<ContentsProps> = (props: ContentsProps) => {
-    const tabs: MyTab[] = props.toTabs(props.tabs);
+const Contents = (p: {}): JSX.Element => {
+    const [tabs, setTabs] = useState(myTabsToTabs(window.tabs) as MyTab[] | Tab[]);
 
-    return <div className="contents">
-        <C.TabBar>
-            <C.TabLabelsOuter><>{
-                tabs.map((tab) => {
-                    return <TabLabel 
-                            key={`tab-${tab.key}`}
-                            _key={tab.key}
-                            fileName={tab.fileName}
-                            type={tab.type}
-                            tabIndex={tab.tabIndex}
-                            closeTab={tab.closeTab!.bind(tab)}
-                            updateFileName={tab.updateFileName!.bind(tab)}
-                    />            
-                })
-            }</></C.TabLabelsOuter>
-        </C.TabBar>        
-        <C.PanesOuter><>{
-            tabs.map((tab) => {
-                switch (tab.type) {
-                    case 'txt':
-                    default : {
-                        return <PaneText 
-                            key={`pane-${tab.key}`} 
-                            _key={`pane-${tab.key}`} 
-                            data={tab.data}
-                            updateData={tab.updateData!.bind(tab)}
-                        />
+    const setToLocalStorage = (tabs: MyTab[]) => {
+        window.localStorage.setItem('tabs', JSON.stringify(tabs));
+    };
+
+    class TabsControler implements TabsControllerInterface {
+        addTab (target: MyTab): void {}
+
+        closeTab (target: MyTab): void {
+            const newTabs: Tab[] = [];
+
+            window.tabs.map((myTab) => {
+                if (target.key !== myTab.key) {
+                    newTabs.push(new Tab(myTab));
+                }
+            });
+
+            this._updateTabs(newTabs);
+        }
+
+        public createNewTab (tabType: MyTabType): void {
+            const newTab: Tab = new Tab();
+            newTab.type = tabType;
+
+            let targetExtension = '';
+
+            switch (tabType) {
+                case 'txt': {
+                    newTab.fileName += '.txt';
+                    targetExtension = '.txt';
+                    break;
+                }
+            }
+
+            newTab.fileName = newTab.fileName.replace(`${targetExtension}${targetExtension}`, targetExtension);
+
+            const newTabs: MyTab[] = [...window.tabs, newTab];
+
+            this._updateTabs(newTabs);
+        }
+
+        public updateFileName(tabKey: string, fileName: string): void {
+            let newTabs: Tab[] = [];
+            
+            window.tabs.map((myTab) => {
+                const tab: Tab = new Tab(myTab);
+
+                if (tab.key === tabKey) {
+                    tab.updateFileName(fileName);
+                }
+
+                newTabs.push(tab);
+            });
+
+            this._updateTabs(newTabs);
+        }
+
+        updateTab (target: MyTab): void {}
+
+        public sortTab (movingKey: string, targetKey: string, sortPositon: 'before' | 'after'): void {
+            const newTabs: Tab[] = [];
+
+            window.tabs.map((myTab) => {
+                //動かすタブのキーと一致しないときのみpush
+                if (myTab.key !== movingKey) {
+                    if (myTab.key === targetKey && sortPositon === 'before') {
+                        newTabs.push(new Tab(this._getMyTabByKey(movingKey)!));
+                    }
+
+                    newTabs.push(new Tab(myTab));
+
+                    if (myTab.key === targetKey && sortPositon === 'after') {
+                        newTabs.push(new Tab(this._getMyTabByKey(movingKey)!));
                     }
                 }
-            })
-        }</></C.PanesOuter>
+            });
+
+            this._updateTabs(newTabs);
+        }
+
+        private _getMyTabByKey (key: string): MyTab | null {
+            let tab: MyTab | null = null;
+
+            window.tabs.map((myTab) => {
+                if (myTab.key === key) {
+                    tab = myTab;
+                }
+            });
+
+            return tab;
+        }
+
+        private _updateTabs (tabs: MyTab[]): void {
+            window.tabs = [...tabs];
+            setToLocalStorage(window.tabs);
+            setTabs(window.tabs);
+        }
+    }
+
+    window.tc = new TabsControler();
+
+    return <div className='contents'>
+        {/*タブバー*/}
+        <TabBar tabs={tabs}/>
+        {/*メインエリア*/}
     </div>
 }
 
-interface ContentsProps {
-    tabs: MyTab[];
-    toTabs (myTabs: MyTab[]): MyTab[];
+function myTabsToTabs (myTabs: MyTab[]): Tab[] {
+    let tabs: Tab[] = [];
+
+    myTabs.map((myTab) => {
+        tabs.push(new Tab(myTab));
+    });
+
+    return tabs;
+}
+
+class Tab implements MyTab {
+    public key: string;
+    public path: string = '';
+    public fileName: string = 'unsaved';
+    public type: MyTabType = 'undefined';
+    public data: string = 'hogehoge\npiyopiyo\nfugafuga';
+
+    constructor (myTab?: MyTab) {
+        if (myTab !== undefined) {
+            this.key = myTab.key;
+            this.path = myTab.path;
+            this.fileName = myTab.fileName;
+            this.type = myTab.type;
+            this.data = myTab.data;
+        } else {
+            this.key = this._createKey();
+        }        
+    }
+    
+    closeTab? (): void;
+    fromMyTab? (myTab: MyTab): MyTab;
+    updateData? (data: string): void;
+    
+    public updateFileName (fileName: string): void {
+        this.fileName = fileName;
+        this._updateType(fileName);
+    }
+
+    setFileName? (filename: string): void;
+    toMyTab?(): MyTab
+
+    private _createKey (): string {
+        const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
+            const getRandom = () => {
+                return Math.floor(Math.random() * 25);
+            };
+
+            let key = '';
+
+            for (let i = 0; i < 16; i++) {
+                const pos: number = getRandom();
+                key += `${ALPHABET.charAt(pos)}`;
+            }
+
+            const isDuplicated = (key: string): boolean => {
+                let duplicated: boolean = false;
+
+                window.tabs.map((tab) => {
+                    if (tab.key === key) {
+                        duplicated = true;
+                    }
+                });
+
+                return duplicated;
+            };
+
+            if (isDuplicated(key)) {
+                return this._createKey();
+            }
+
+            return key;
+    }
+
+    private _updateType (fn: string): void {
+        const regs = {
+            text: /.txt$/
+        }
+
+        switch (true) {
+            case regs.text.test(fn): {
+                this.type = 'txt';
+                return;
+            }
+            default: {
+                this.type = 'undefined';
+                return;
+            }
+        }
+    }
 }
 
 export default Contents;

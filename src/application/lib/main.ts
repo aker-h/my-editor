@@ -1,5 +1,3 @@
-import path from 'path';
-import fs from 'fs';
 import { app, App, BrowserWindow, BrowserWindowConstructorOptions, ipcMain as IM } from 'electron'
 
 import log from 'LIB/log';

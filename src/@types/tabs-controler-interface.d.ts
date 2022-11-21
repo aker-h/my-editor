@@ -4,5 +4,5 @@ interface TabsControllerInterface {
     createNewTab (tabType?: MyTabType): void;
     updateFileName(tabKey: string, fileName: string): void;
     updateTab (target: MyTab): void;
-    sortTab (targetTabIndex: number, to: number): void;
+    sortTab (movingKey: string, targetKey: string, sortPositon: 'before' | 'after'): void;
 }

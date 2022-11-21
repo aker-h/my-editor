@@ -4,7 +4,6 @@ interface MyTab {
     fileName: string;
     type: MyTabType;
     data: string;
-    tabIndex: number
     
     closeTab? (): void;
     fromMyTab? (myTab: MyTab): MyTab

@@ -78,7 +78,7 @@ const TabLabel = (p: TabLabelProps): JSX.Element => {
                 to += 1;
             }
 
-            window.tc.sortTab(draggingTab, to);  
+            // window.tc.sortTab(draggingTab, to);  
 
             this._leave();
             draggingTab = 9999;                 

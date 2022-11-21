@@ -8,7 +8,7 @@ import Boot from 'REN_LIB/boot';
 let booted: boolean = false;
 
 const Loading = (props: LoadingProps): JSX.Element => {
-    const tc = window.tc;
+    // const tc = window.tc;
     const [ statusText, setStatusText ] = useState('loading...');
     const [ fontSize, setFontSize] = useState(20);
     window.ipc.boot.postShow();
@@ -32,7 +32,8 @@ const Loading = (props: LoadingProps): JSX.Element => {
         document.addEventListener(R.eventType.SET_STATUS_TEXT, onSetStatusTextHandler);
 
         if (!booted) {
-            load(tc);
+            load();
+            // load(tc);
             booted = true;
         }        
 
@@ -62,18 +63,18 @@ const StatusText = (p: StatusTextProps): JSX.Element => {
     return <div className='status-text' style={style}>{p.statusText}</div>
 }
 
-async function load (tc: TabsControllerInterface) { 
+async function load () { 
     await Boot.requestInitWinSize();
 
-    const tabs: MyTab[] = await Boot.loadLastOpenedTabs();
+    window.tabs = await Boot.loadLastOpenedTabs();
 
-    if (tabs.length === 0) {
-        tc.createNewTab();
-    } else {
-        tabs.map((tab) => {
-            tc.addTab(tab);
-        });
-    }    
+    // if (tabs.length === 0) {
+    //     tc.createNewTab();
+    // } else {
+    //     tabs.map((tab) => {
+    //         tc.addTab(tab);
+    //     });
+    // }    
 
     const LIMIT = 1;
 
