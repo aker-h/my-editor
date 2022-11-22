@@ -1,10 +1,7 @@
-import React, { useState, useRef, MutableRefObject, MouseEvent, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import TabBar from 'COMPONENTS/tab-bar';
-import TabLabel, { DebugInterface } from 'COMPONENTS/tab-label';
-import PaneText from 'COMPONENTS/pane/pane-text';
-
-let booted: boolean = false;
+import PanesOuter from 'COMPONENTS/panes-outer';
 
 const Contents = (p: {}): JSX.Element => {
     const [tabs, setTabs] = useState(myTabsToTabs(window.tabs) as MyTab[] | Tab[]);
@@ -65,7 +62,15 @@ const Contents = (p: {}): JSX.Element => {
             this._updateTabs(newTabs);
         }
 
-        updateTab (target: MyTab): void {}
+        public updateTab (target: MyTab): void {
+            const newTabs: MyTab[] = [];
+
+            window.tabs.map((tab) => {
+                newTabs.push((tab.key === target.key)? target: tab);
+            });
+
+            this._updateTabs(newTabs);
+        }
 
         public sortTab (movingKey: string, targetKey: string, sortPositon: 'before' | 'after'): void {
             const newTabs: Tab[] = [];
@@ -113,6 +118,7 @@ const Contents = (p: {}): JSX.Element => {
         {/*タブバー*/}
         <TabBar tabs={tabs}/>
         {/*メインエリア*/}
+        <PanesOuter tabs={tabs}/>
     </div>
 }
 
@@ -208,100 +214,3 @@ class Tab implements MyTab {
 }
 
 export default Contents;
-
-class C {
-    public static TabBar (props: TabBarProps): JSX.Element {
-        class CreatTabButtonHandler {
-            public ref = useRef() as MutableRefObject<HTMLElement>;
-            
-            private readonly _FILLED: string = 'bi bi-file-earmark-plus-fill';
-            private readonly _NON_FILLED: string = 'bi bi-file-earmark-plus';
-            
-            public onClick (ev: MouseEvent<HTMLDivElement>): void {
-                this._createNewTab();
-            }
-    
-            public onMouseOver (ev: MouseEvent<HTMLDivElement>): void {
-                this._toggleFilled(true);
-            }
-    
-            public onMouseLeave (ev: MouseEvent<HTMLDivElement>): void {
-                this._toggleFilled(false);
-            }
-    
-            private _createNewTab (): void {
-                window.tc.createNewTab();
-            }
-    
-            private _toggleFilled (filled: boolean): void {
-                const target: HTMLElement = this.ref.current!;
-    
-                if (filled) {
-                    target.className = this._FILLED;
-                } else if (!filled) {
-                    target.className = this._NON_FILLED;
-                }
-            }
-        };
-    
-        const ctbh = new CreatTabButtonHandler();
-    
-        return <div className='tab-bar'>
-            <div className='tab-bar-blank left'></div>
-            {props.children}
-            <div className='tab-bar-blank right'>
-                <div className='create-tab-button-outer'>
-                    <div className='create-tab-button-inner'
-                        onClick={ctbh.onClick.bind(ctbh)}
-                        onMouseLeave={ctbh.onMouseLeave.bind(ctbh)}
-                        onMouseOver={ctbh.onMouseOver.bind(ctbh)}                    
-                    >
-                        <i className="bi bi-file-earmark-plus" ref={ctbh.ref}/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-
-    public static TabLabelsOuter (props: TabLabelsOuterProps): JSX.Element {
-        const refTlo = useRef() as MutableRefObject<HTMLDivElement>;
-
-        useEffect(() => {
-            const widthTabLabelsOuter: number = ((tabLabelsOuter: HTMLDivElement): number => {
-                let width: number = 0;
-
-                const tabLabels: HTMLDivElement[] = Array.from(tabLabelsOuter.children) as HTMLDivElement[];
-
-                tabLabels.map((tabLabel) => {
-                    width += tabLabel.offsetWidth;
-                });
-
-                return width;
-            })(refTlo.current!);
-
-            window.sApi.updateWidthTabLabelsOuter(widthTabLabelsOuter);
-        });
-
-        return <div className='tab-labels-outer' ref={refTlo}>
-            {props.children}
-        </div>
-    }
-
-    public static PanesOuter (props: PanesOuterProps): JSX.Element {
-        return <div className='panes-outer'>
-            {props.children}
-        </div>
-    }
-};
-
-interface TabBarProps {
-    children: JSX.Element;
-}
-
-interface TabLabelsOuterProps {
-    children: JSX.Element
-}
-
-interface PanesOuterProps {
-    children: JSX.Element
-}

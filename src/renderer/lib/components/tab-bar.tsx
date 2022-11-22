@@ -1,4 +1,4 @@
-import React, { useState, useRef, RefObject, MutableRefObject , MouseEvent, DragEvent, KeyboardEvent, FocusEvent} from 'react';
+import React, { useState, useRef, useEffect, RefObject, MutableRefObject , MouseEvent, DragEvent, KeyboardEvent, FocusEvent} from 'react';
 import useDoubleClick from 'use-double-click';
 
 const DEFAULT_DRAGGING_KEY: string = 'NON_TAGET';
@@ -7,7 +7,29 @@ let draggingTabKey: string = DEFAULT_DRAGGING_KEY;
 
 const TabBar = (p: {tabs: MyTab[]}): JSX.Element => {
     const tabs = p.tabs;
-    
+
+    const tloh = new class TabLabelsOuterHandler {
+        public ref = useRef() as MutableRefObject<HTMLDivElement>;
+
+        constructor () {}
+
+        public onRender () {
+            window.sApi.updateWidthTabLabelsOuter(this._getInnerWidth());
+        }
+
+        private _getInnerWidth (): number {
+            let width: number = 0;
+
+            const tabLabels: HTMLDivElement[] = Array.from(this.ref.current!.children) as HTMLDivElement[];
+
+            tabLabels.map((tabLabel) => {
+                width += tabLabel.offsetWidth;
+            });
+
+            return width;
+        }
+    }();
+
     const ctbh = new class CreateTabButtonHandler {
         public ref = useRef() as MutableRefObject<HTMLElement>;
         private readonly _NON_FILLED: string = 'bi bi-file-earmark-plus';
@@ -42,9 +64,13 @@ const TabBar = (p: {tabs: MyTab[]}): JSX.Element => {
         }
     }();
 
+    useEffect(() => {
+        tloh.onRender();
+    });
+
     return <div className='tab-bar'>
             <div className='tab-bar-blank left'></div>
-            <div className='tab-labels-outer'><>{
+            <div className='tab-labels-outer' ref={tloh.ref}><>{
                 tabs.map((tab) => {
                     return <TabLabel key={tab.key} tab={tab}/>
                 })

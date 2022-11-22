@@ -417,16 +417,25 @@ div.wrapper {
             & > div {
                 position: relative;
                 top: 0;
-                left: 0;                
+                left: 0;
+                display: flex;          
                 width: 100%;
 
                 &.panes-outer {
-                    display: block;
                     height: calc(100% - var(--height-tab));
+
+                    .pane {
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        display: inline-flex;
+                        width: 100%;
+                        min-width: calc(100% / 4);
+                        height: 100%;
+                    }
                 }
 
                 &.tab-bar {
-                    display: flex;
                     height: var(--height-tab);
                     border-bottom: 1px solid var(--color-borderline);
 
@@ -438,6 +447,9 @@ div.wrapper {
                         height: 100%;
 
                         &.tab-labels-outer {
+                            overflow-y: hidden;
+                            overflow-x: overlay;
+
                             & > div.tab-label {
                                 position: relative;
                                 top: 0;
@@ -549,6 +561,20 @@ div.wrapper {
                                     }
                                 }
                             }
+
+                            &::-webkit-scrollbar {
+                                width: 4px;
+                                height: 4px;
+                            }
+
+                            &::-webkit-scrollbar-track {
+                                background-color: transparent;
+                            }
+
+                            &::-webkit-scrollbar-thumb {
+                                border-radius: 2px;
+                                background-color: var(--color-primary);
+                            }
                         }                       
 
                         &.tab-bar-blank {
@@ -556,8 +582,9 @@ div.wrapper {
                             background-color: rgba(0, 0, 0, 0.2);
 
                             &.right {
-                                width: 100%;
+                                width: calc(100% - 32px - var(--width-tab-labels-outer));
                                 min-width: fit-content;
+                                padding-right: 4px;
                                 border-left-width: 1px;
 
                                 & > div.create-tab-button-outer {
@@ -600,119 +627,207 @@ body.fullscreen div.react-outer {
     }
 }
 
-div.panes-outer div.pane{
+div.pane {
     &.text {
-        overflow-y: hidden;
+        overflow-x: hidden;
+        overflow-y: overlay;
 
         & div.pane-text--inner {
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            transform: translate(-50%, 0);
-            width: calc(100% - 32px);
-            height: calc(100% - 16px);
+            position: relative;
+            top: 0;
+            left: 0;
+            margin: 4px 0 0 4px;
+            display: block;
+            width: calc(100% - 4px);
+            height: var(--height);
 
-            & div.pane-text-wrapper {
-                position: absolute;
+            & > div {
+                position: relative;
                 top: 0;
                 left: 0;
-                display: flex;
-                width: 100%;
+                display: inline-block;
                 height: 100%;
+                vertical-align: top;
 
-                & > div {
-                    position: relative;
-                    top: 0;
+                &.editor-outer {
+                    width: calc(100% - var(--width-line-numbers));
+                    overflow-y: hidden;
+                    overflow-x: overlay;
 
-                    &.line-numbers--outer {
+                    & div.editor-inner {
+                        position: relative;
+                        top: 0;
                         left: 0;
-                        display: inline-flex;
-                        width: var(--width-linenumbers);
-                        height: var(--height);
-                        border-right: 1px solid var(--color-borderline);
-                        flex-flow: column;
-                        box-shadow: rgba(0, 0, 0, 0.2) 16px 0 8px -8px;
+                        display: block;
+                        width: fit-content;
+                        min-width: 100%;
+                        height: fit-content;
 
-                        & div.line-number--outer {
-                            position: relative;
-                            top: 0;
-                            left: 0;
-                            display: flex;
-                            width: 100%;
-                            height: 100%;
-
-                            & .line-number--inner {
-                                position: absolute;
-                                top: 50%;
-                                right: 8px;
-                                display: block;
-                                transform: translate(0, -50%);
-                                font-size: calc(var(--size) * 0.8);
-                                color: var(--color-text-gray);
-                                user-select: none;
-                            }
-
-                            &.active div.line-number--inner {
-                                color: var(--color-text-main);
-                            }
-                        }
-                    }
-
-                    &.editor-outer {
-                        left: 16px;
-                        display: inline-flex;
-                        width: calc(100% - 64px);
-                        height: 100%;
-                        overflow-x: overlay;
-
-                        & div.editor-inner {
-                            position: absolute;
+                        & .edit-unit {
                             top: 0;
                             left: 0;
                             display: block;
-                            min-width: 100%;
-                            width: fit-content;
+                            font-size: var(--size);
+                            font-family: "Meirio UI";
 
-                            & .edit-unit {
-                                font-family: 'JetBrains Mono';
-                                font-size: 20px;
+                            &.view-area {
+                                position: relative;
+                            }
 
-                                &.edit-area {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    height: 100%;
-                                    padding: 0;
-                                    resize: none;
-                                    border-width: 0;
-                                    background: transparent;
-                                    color: transparent;
-                                    white-space: nowrap;
-                                    caret-color: var(--color-text-main);
-                                }
+                            &.edit-area {
+                                position: absolute;
+                                border: none;
+                                width: 100%;
+                                height: 100%;
+                                padding: 0;
+                                background-color: transparent;
+                                color: transparent;
+                                caret-color: var(--color-text-main);
+                                resize: none;
                             }
                         }
+                    }
+                }
 
-                        &::-webkit-scrollbar {
-                            width: 8px;
-                            height: 8px;
-                        }
+                &.line-numbers {
+                    width: var(--width-line-numbers);
+                    padding-right: calc(var(--width-line-numbers) / 4);
+                    user-select: none;
 
-                        &::-webkit-scrollbar-thumb {
-                            border-radius: 4px;
-                            background-color: var(--highlight-item);
-                        }
+                    & div.line-number--outer {
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        display: block;
+                        width: 100%;
+                        height: calc(100% / var(--length));
 
-                        &::-webkit-scrollbar-track {
-                            background-color: transparent;
+                        & div.line-number--inner {
+                            position: absolute;
+                            top: 50%;
+                            right: 0;
+                            transform: translateY(-50%);
                         }
                     }
                 }
             }
-
         }
     }
 }
+
+// div.panes-outer div.pane{
+//     &.text {
+//         overflow-y: hidden;
+
+//         & div.pane-text--inner {
+//             position: absolute;
+//             top: 8px;
+//             left: 50%;
+//             transform: translate(-50%, 0);
+//             width: calc(100% - 32px);
+//             height: calc(100% - 16px);
+
+//             & div.pane-text-wrapper {
+//                 position: absolute;
+//                 top: 0;
+//                 left: 0;
+//                 display: flex;
+//                 width: 100%;
+//                 height: 100%;
+
+//                 & > div {
+//                     position: relative;
+//                     top: 0;
+
+//                     &.line-numbers--outer {
+//                         left: 0;
+//                         display: inline-flex;
+//                         width: var(--width-linenumbers);
+//                         height: var(--height);
+//                         border-right: 1px solid var(--color-borderline);
+//                         flex-flow: column;
+//                         box-shadow: rgba(0, 0, 0, 0.2) 16px 0 8px -8px;
+
+//                         & div.line-number--outer {
+//                             position: relative;
+//                             top: 0;
+//                             left: 0;
+//                             display: flex;
+//                             width: 100%;
+//                             height: 100%;
+
+//                             & .line-number--inner {
+//                                 position: absolute;
+//                                 top: 50%;
+//                                 right: 8px;
+//                                 display: block;
+//                                 transform: translate(0, -50%);
+//                                 font-size: calc(var(--size) * 0.8);
+//                                 color: var(--color-text-gray);
+//                                 user-select: none;
+//                             }
+
+//                             &.active div.line-number--inner {
+//                                 color: var(--color-text-main);
+//                             }
+//                         }
+//                     }
+
+//                     &.editor-outer {
+//                         left: 16px;
+//                         display: inline-flex;
+//                         width: calc(100% - 64px);
+//                         height: 100%;
+//                         overflow-x: overlay;
+
+//                         & div.editor-inner {
+//                             position: absolute;
+//                             top: 0;
+//                             left: 0;
+//                             display: block;
+//                             min-width: 100%;
+//                             width: fit-content;
+
+//                             & .edit-unit {
+//                                 font-family: 'JetBrains Mono';
+//                                 font-size: 20px;
+
+//                                 &.edit-area {
+//                                     position: absolute;
+//                                     top: 0;
+//                                     left: 0;
+//                                     height: 100%;
+//                                     padding: 0;
+//                                     resize: none;
+//                                     border-width: 0;
+//                                     background: transparent;
+//                                     color: transparent;
+//                                     white-space: nowrap;
+//                                     caret-color: var(--color-text-main);
+//                                 }
+//                             }
+//                         }
+
+//                         &::-webkit-scrollbar {
+//                             width: 8px;
+//                             height: 8px;
+//                         }
+
+//                         &::-webkit-scrollbar-thumb {
+//                             border-radius: 4px;
+//                             background-color: var(--highlight-item);
+//                         }
+
+//                         &::-webkit-scrollbar-track {
+//                             background-color: transparent;
+//                         }
+//                     }
+//                 }
+//             }
+
+//         }
+//     }
+// }
 
 * {
     transform: translate(0, 0);
