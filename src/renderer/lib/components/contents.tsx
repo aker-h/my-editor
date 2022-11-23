@@ -13,7 +13,7 @@ const Contents = (p: {}): JSX.Element => {
     class TabsControler implements TabsControllerInterface {
         addTab (target: MyTab): void {}
 
-        closeTab (target: MyTab): void {
+        public closeTab (target: MyTab): void {
             const newTabs: Tab[] = [];
 
             window.tabs.map((myTab) => {
@@ -21,6 +21,8 @@ const Contents = (p: {}): JSX.Element => {
                     newTabs.push(new Tab(myTab));
                 }
             });
+
+            window.sApi.removeHeightTextPaneDivPropByKey(target.key);
 
             this._updateTabs(newTabs);
         }
@@ -46,22 +48,6 @@ const Contents = (p: {}): JSX.Element => {
             this._updateTabs(newTabs);
         }
 
-        public updateFileName(tabKey: string, fileName: string): void {
-            let newTabs: Tab[] = [];
-            
-            window.tabs.map((myTab) => {
-                const tab: Tab = new Tab(myTab);
-
-                if (tab.key === tabKey) {
-                    tab.updateFileName(fileName);
-                }
-
-                newTabs.push(tab);
-            });
-
-            this._updateTabs(newTabs);
-        }
-
         public updateTab (target: MyTab): void {
             const newTabs: MyTab[] = [];
 
@@ -73,6 +59,10 @@ const Contents = (p: {}): JSX.Element => {
         }
 
         public sortTab (movingKey: string, targetKey: string, sortPositon: 'before' | 'after'): void {
+            if (movingKey === targetKey) {
+                return;
+            }
+
             const newTabs: Tab[] = [];
 
             window.tabs.map((myTab) => {
@@ -151,11 +141,12 @@ class Tab implements MyTab {
         }        
     }
     
-    closeTab? (): void;
-    fromMyTab? (myTab: MyTab): MyTab;
     updateData? (data: string): void;
+
+    public updateDataBeforeReRendering (): void { /*Pane内で定義*/ }
     
     public updateFileName (fileName: string): void {
+        this.updateDataBeforeReRendering();
         this.fileName = fileName;
         this._updateType(fileName);
     }

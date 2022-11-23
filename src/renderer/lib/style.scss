@@ -424,6 +424,9 @@ div.wrapper {
                 &.panes-outer {
                     height: calc(100% - var(--height-tab));
 
+                    overflow-x: auto;
+                    overflow-y: hidden;
+
                     .pane {
                         position: relative;
                         top: 0;
@@ -432,6 +435,25 @@ div.wrapper {
                         width: 100%;
                         min-width: calc(100% / 4);
                         height: 100%;
+                        border-left: 1px solid var(--color-borderline);
+
+                        &:first-child {
+                            border-left-width: 0;
+                        }
+                    }
+
+                    &::-webkit-scrollbar {
+                        width: 4px;
+                        height: 4px;
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        border-radius: 2px;
+                        background-color: var(--color-primary);
+                    }
+
+                    &::-webkit-scrollbar-track {
+                        background-color: transparent;
                     }
                 }
 
@@ -458,12 +480,16 @@ div.wrapper {
                                 width: fit-content;
                                 min-width: calc(var(--height-tab) * 5);
                                 height: 100%;
-                                border-width: 0 1px 0 1px;
+                                border-width: 0 0 0 1px;
                                 border-style: solid;
                                 border-color: var(--color-borderline);
                                 -webkit-user-drag: element;
                                 -webkit-user-select: none;
                                 user-select: none;
+
+                                &:first-child {
+                                    border-left-width: 0;
+                                }
 
                                 & > div {
                                     position: relative;
@@ -629,30 +655,29 @@ body.fullscreen div.react-outer {
 
 div.pane {
     &.text {
-        overflow-x: hidden;
-        overflow-y: overlay;
+        overflow: hidden;
 
         & div.pane-text--inner {
             position: relative;
             top: 0;
             left: 0;
-            margin: 4px 0 0 4px;
             display: block;
-            width: calc(100% - 4px);
-            height: var(--height);
+            width: 100%;
+            height: 100%;
+            font-size: var(--size);
 
             & > div {
                 position: relative;
                 top: 0;
                 left: 0;
+                margin-top: 4px;
                 display: inline-block;
-                height: 100%;
-                vertical-align: top;
+                height: calc(100% - 4px);
+                vertical-align: top;                
 
                 &.editor-outer {
                     width: calc(100% - var(--width-line-numbers));
-                    overflow-y: hidden;
-                    overflow-x: overlay;
+                    overflow: auto;
 
                     & div.editor-inner {
                         position: relative;
@@ -662,172 +687,172 @@ div.pane {
                         width: fit-content;
                         min-width: 100%;
                         height: fit-content;
+                        min-height: 100%;
 
                         & .edit-unit {
                             top: 0;
                             left: 0;
                             display: block;
-                            font-size: var(--size);
-                            font-family: "Meirio UI";
+                            height: fit-content;
+                            min-height: 100%;
 
                             &.view-area {
                                 position: relative;
+                                width: fit-content;
+                                min-width: 100%;
                             }
 
                             &.edit-area {
                                 position: absolute;
-                                border: none;
-                                width: 100%;
-                                height: 100%;
+                                border-width: 0;
                                 padding: 0;
+                                width: 100%;
                                 background-color: transparent;
+                                font-size: var(--size);
+                                font-family: "MeirioUI";
                                 color: transparent;
                                 caret-color: var(--color-text-main);
                                 resize: none;
+                                overflow: hidden;
                             }
                         }
                     }
+
+                    &::-webkit-scrollbar {
+                        width: 4px;
+                        height: 4px;
+                    }
+
+                    &::-webkit-scrollbar-track {
+                        background-color: transparent;
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        border-radius: 2px;
+                        background-color: var(--color-primary);
+                    }
                 }
 
-                &.line-numbers {
+                &.line-numbers--outer {
                     width: var(--width-line-numbers);
                     padding-right: calc(var(--width-line-numbers) / 4);
-                    user-select: none;
+                    overflow: hidden;
 
-                    & div.line-number--outer {
+                    & div.line-numbers--inner {
                         position: relative;
                         top: 0;
                         left: 0;
                         display: block;
                         width: 100%;
-                        height: calc(100% / var(--length));
+                        height: fit-content;
 
-                        & div.line-number--inner {
-                            position: absolute;
-                            top: 50%;
-                            right: 0;
-                            transform: translateY(-50%);
+                        & div.line-number--outer {
+                            position: relative;
+                            top: 0;
+                            left: 0;
+                            display: block;
+                            width: 100%;
+                            height: 1.5em;
+    
+                            & div.line-number--inner {
+                                position: absolute;
+                                top: 50%;
+                                right: 0;
+                                transform: translateY(-50%);
+                            }
                         }
                     }
                 }
             }
         }
+
+        // overflow-x: hidden;
+        // overflow-y: overlay;
+
+        // & div.pane-text--inner {
+        //     position: relative;
+        //     top: 0;
+        //     left: 0;
+        //     margin: 4px 0 0 4px;
+        //     display: block;
+        //     width: calc(100% - 4px);
+        //     height: var(--height);
+        //     min-height: calc(100% - 4px);
+
+        //     & > div {
+        //         position: relative;
+        //         top: 0;
+        //         left: 0;
+        //         display: inline-block;
+        //         height: 100%;
+        //         vertical-align: top;
+
+        //         &.editor-outer {
+        //             width: calc(100% - var(--width-line-numbers));
+        //             overflow-y: hidden;
+        //             overflow-x: overlay;
+
+        //             & div.editor-inner {
+        //                 position: relative;
+        //                 top: 0;
+        //                 left: 0;
+        //                 display: block;
+        //                 width: fit-content;
+        //                 min-width: 100%;
+        //                 height: fit-content;
+
+        //                 & .edit-unit {
+        //                     top: 0;
+        //                     left: 0;
+        //                     display: block;
+        //                     font-size: var(--size);
+        //                     font-family: "Meirio UI";
+
+        //                     &.view-area {
+        //                         position: relative;
+        //                     }
+
+        //                     &.edit-area {
+        //                         position: absolute;
+        //                         border: none;
+        //                         width: 100%;
+        //                         height: 100%;
+        //                         padding: 0;
+        //                         background-color: transparent;
+        //                         color: transparent;
+        //                         caret-color: var(--color-text-main);
+        //                         resize: none;
+        //                     }
+        //                 }
+        //             }
+        //         }
+
+        //         &.line-numbers {
+        //             width: var(--width-line-numbers);
+        //             padding-right: calc(var(--width-line-numbers) / 4);
+        //             user-select: none;
+
+        //             & div.line-number--outer {
+        //                 position: relative;
+        //                 top: 0;
+        //                 left: 0;
+        //                 display: block;
+        //                 width: 100%;
+        //                 height: 1.5em;
+        //                 font-size: var(--size);
+
+        //                 & div.line-number--inner {
+        //                     position: absolute;
+        //                     top: 50%;
+        //                     right: 0;
+        //                     transform: translateY(-50%);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
-
-// div.panes-outer div.pane{
-//     &.text {
-//         overflow-y: hidden;
-
-//         & div.pane-text--inner {
-//             position: absolute;
-//             top: 8px;
-//             left: 50%;
-//             transform: translate(-50%, 0);
-//             width: calc(100% - 32px);
-//             height: calc(100% - 16px);
-
-//             & div.pane-text-wrapper {
-//                 position: absolute;
-//                 top: 0;
-//                 left: 0;
-//                 display: flex;
-//                 width: 100%;
-//                 height: 100%;
-
-//                 & > div {
-//                     position: relative;
-//                     top: 0;
-
-//                     &.line-numbers--outer {
-//                         left: 0;
-//                         display: inline-flex;
-//                         width: var(--width-linenumbers);
-//                         height: var(--height);
-//                         border-right: 1px solid var(--color-borderline);
-//                         flex-flow: column;
-//                         box-shadow: rgba(0, 0, 0, 0.2) 16px 0 8px -8px;
-
-//                         & div.line-number--outer {
-//                             position: relative;
-//                             top: 0;
-//                             left: 0;
-//                             display: flex;
-//                             width: 100%;
-//                             height: 100%;
-
-//                             & .line-number--inner {
-//                                 position: absolute;
-//                                 top: 50%;
-//                                 right: 8px;
-//                                 display: block;
-//                                 transform: translate(0, -50%);
-//                                 font-size: calc(var(--size) * 0.8);
-//                                 color: var(--color-text-gray);
-//                                 user-select: none;
-//                             }
-
-//                             &.active div.line-number--inner {
-//                                 color: var(--color-text-main);
-//                             }
-//                         }
-//                     }
-
-//                     &.editor-outer {
-//                         left: 16px;
-//                         display: inline-flex;
-//                         width: calc(100% - 64px);
-//                         height: 100%;
-//                         overflow-x: overlay;
-
-//                         & div.editor-inner {
-//                             position: absolute;
-//                             top: 0;
-//                             left: 0;
-//                             display: block;
-//                             min-width: 100%;
-//                             width: fit-content;
-
-//                             & .edit-unit {
-//                                 font-family: 'JetBrains Mono';
-//                                 font-size: 20px;
-
-//                                 &.edit-area {
-//                                     position: absolute;
-//                                     top: 0;
-//                                     left: 0;
-//                                     height: 100%;
-//                                     padding: 0;
-//                                     resize: none;
-//                                     border-width: 0;
-//                                     background: transparent;
-//                                     color: transparent;
-//                                     white-space: nowrap;
-//                                     caret-color: var(--color-text-main);
-//                                 }
-//                             }
-//                         }
-
-//                         &::-webkit-scrollbar {
-//                             width: 8px;
-//                             height: 8px;
-//                         }
-
-//                         &::-webkit-scrollbar-thumb {
-//                             border-radius: 4px;
-//                             background-color: var(--highlight-item);
-//                         }
-
-//                         &::-webkit-scrollbar-track {
-//                             background-color: transparent;
-//                         }
-//                     }
-//                 }
-//             }
-
-//         }
-//     }
-// }
 
 * {
     transform: translate(0, 0);

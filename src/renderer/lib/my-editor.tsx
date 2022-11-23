@@ -19,12 +19,12 @@ const MyEditor = (p: {}): JSX.Element => {
     }    
 
     document.addEventListener(R.eventType.COMPLETE_LOAD, onCompleteLoad);
-    WindowHandler.observe();
-
+    
     useEffect(() => {
+        wh.observe();
         return () => {
             document.removeEventListener(R.eventType.COMPLETE_LOAD, onCompleteLoad);
-            WindowHandler.off();
+            wh.off();
         }
     });
 
@@ -40,38 +40,38 @@ const MyEditor = (p: {}): JSX.Element => {
 
 export default MyEditor;
 
-class WindowHandler {
+const wh = class WindowHandler {
     private static readonly _WINDOW = Channel.toRenderer.window;
     private static readonly _FULLSCREEN = 'fullscreen';
     private static readonly _MAXIMIZED = 'maximized'
 
     public static observe (): void {
-        window.ipc.on(WindowHandler._WINDOW.POST_ENTER_FULLSCREEN, WindowHandler._enterFullscreen.bind(WindowHandler));
-        window.ipc.on(WindowHandler._WINDOW.POST_LEAVE_FULLSCREEN, WindowHandler._leaveFullscreen.bind(WindowHandler));
-        window.ipc.on(WindowHandler._WINDOW.POST_MAXIMIZED, WindowHandler._maximized.bind(WindowHandler));
-        window.ipc.on(WindowHandler._WINDOW.POST_UNMAXIMIZED, WindowHandler._unmaximized.bind(WindowHandler));
+        window.ipc.on(wh._WINDOW.POST_ENTER_FULLSCREEN, wh._enterFullscreen.bind(wh));
+        window.ipc.on(wh._WINDOW.POST_LEAVE_FULLSCREEN, wh._leaveFullscreen.bind(wh));
+        window.ipc.on(wh._WINDOW.POST_MAXIMIZED, wh._maximized.bind(wh));
+        window.ipc.on(wh._WINDOW.POST_UNMAXIMIZED, wh._unmaximized.bind(wh));
     }
 
     public static off (): void {
-        window.ipc.removeAllListeners(WindowHandler._WINDOW.POST_ENTER_FULLSCREEN);
-        window.ipc.removeAllListeners(WindowHandler._WINDOW.POST_LEAVE_FULLSCREEN);
-        window.ipc.removeAllListeners(WindowHandler._WINDOW.POST_MAXIMIZED);
-        window.ipc.removeAllListeners(WindowHandler._WINDOW.POST_UNMAXIMIZED);
+        window.ipc.removeAllListeners(wh._WINDOW.POST_ENTER_FULLSCREEN);
+        window.ipc.removeAllListeners(wh._WINDOW.POST_LEAVE_FULLSCREEN);
+        window.ipc.removeAllListeners(wh._WINDOW.POST_MAXIMIZED);
+        window.ipc.removeAllListeners(wh._WINDOW.POST_UNMAXIMIZED);
     }
 
     private static _enterFullscreen (ev: IREvent) {
-        document.body.classList.add(WindowHandler._FULLSCREEN);
+        document.body.classList.add(wh._FULLSCREEN);
     }
 
     private static _leaveFullscreen (ev: IREvent) {
-        document.body.classList.remove(WindowHandler._FULLSCREEN);
+        document.body.classList.remove(wh._FULLSCREEN);
     }
 
     private static _maximized (ev: IREvent) {
-        document.body.classList.add(WindowHandler._MAXIMIZED);
+        document.body.classList.add(wh._MAXIMIZED);
     }
 
     private static _unmaximized (ev: IREvent) {
-        document.body.classList.remove(WindowHandler._MAXIMIZED);
+        document.body.classList.remove(wh._MAXIMIZED);
     }
 };

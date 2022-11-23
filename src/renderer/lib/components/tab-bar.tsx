@@ -192,7 +192,7 @@ const TabLabel = (p: {tab: MyTab}): JSX.Element  => {
         <div className='file-icon-outer'>
             <i className={`${getIconsClassNameByType(tab.type)} file-icon`}/>
         </div>
-        {!isEdit? <FileNameLabel filename={tab.fileName} toEdit={toEdit}/>: <FileNameEditor _key={tab.key} filename={tab.fileName} leaveEdit={leaveEdit}/>}
+        {!isEdit? <FileNameLabel filename={tab.fileName} toEdit={toEdit}/>: <FileNameEditor tab={tab} leaveEdit={leaveEdit}/>}
         <div className='tab-close-btn-outer' onClick={tabCloseBtnOnClick}>
             <div className='tab-close-btn-inner'>
                 <i className="bi bi-x tab-close-icon"/>
@@ -228,7 +228,7 @@ const FileNameLabel = (p: {filename: string, toEdit(): void}): JSX.Element => {
     return <div className='filename-label' ref={ref}>{p.filename}</div>
 }
 
-const FileNameEditor = (p: {_key: string, filename: string, leaveEdit(): void}): JSX.Element => {
+const FileNameEditor = (p: {tab: MyTab, leaveEdit(): void}): JSX.Element => {
     const ref = useRef() as MutableRefObject<HTMLInputElement>;
 
     class FilenameEditorHandler {
@@ -237,7 +237,6 @@ const FileNameEditor = (p: {_key: string, filename: string, leaveEdit(): void}):
         public onBlur (ev?: FocusEvent): void {
             p.leaveEdit();
             // refFeh.current!.value = refFlh.current!.textContent!
-            console.log('unkoooooooooo');
         }
     
         public onKeypress (ev: KeyboardEvent<HTMLInputElement>): void {
@@ -273,7 +272,9 @@ const FileNameEditor = (p: {_key: string, filename: string, leaveEdit(): void}):
             const accepted: boolean = this._evaluateFileName(filename);
     
             if (accepted) {
-                window.tc.updateFileName(p._key, filename);
+                p.tab.updateFileName!(filename);
+                window.tc.updateTab(p.tab)
+                // window.tc.updateFileName(p._key, filename);
                 p.leaveEdit();
                 return;
             }
@@ -284,7 +285,7 @@ const FileNameEditor = (p: {_key: string, filename: string, leaveEdit(): void}):
 
     const h: FilenameEditorHandler = new FilenameEditorHandler();
 
-    return <input className='filename-editor' type="text" defaultValue={p.filename}
+    return <input className='filename-editor' type="text" defaultValue={p.tab.fileName}
     ref={ref} onBlur={h.onBlur.bind(h)} onKeyPress={h.onKeypress.bind(h)}></input>
 }
 

@@ -3,10 +3,8 @@ interface MyTab {
     path: string;
     fileName: string;
     type: MyTabType;
-    data: string;
+    data: string;    
     
-    closeTab? (): void;
-    fromMyTab? (myTab: MyTab): MyTab
     updateData? (data: string): void;
     updateFileName? (fileName: string): void;
     setFileName? (filename: string): void;

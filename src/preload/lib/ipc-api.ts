@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer, ipcRenderer as IR, IpcRendererEvent as IREv
 
 import P from 'LIB/promise';
 import R from 'LIB/resource';
+import log from 'LIB/log';
 import Channel from 'PRE_LIB/ipc-channel';
 
 export default class IpcApi {
@@ -68,8 +69,9 @@ export default class IpcApi {
         }
     }();
 
-    public on = (channel: string, callback: (...args: any[]) => void) => {
+    public on = (channel: string, callback: (...args: any[]) => void) => {        
         IR.addListener(channel, (event: IREvent, args: any) => {
+            log.event(`Received ['${channel}']`);
             callback(event, args);
         });
 

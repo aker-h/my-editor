@@ -1,18 +1,38 @@
-import React from 'react';
+import React, { useRef, useState, RefObject } from 'react';
 
-const LineNumbers = (p: {_key: string, length: number, active: number}): JSX.Element => {
+const LineNumbers = (p: {_key: string, length: number, active: number, lnh: LineNumbersHandler}): JSX.Element => {
+    const lnh: LineNumbersHandler = p.lnh;
+    const [length, setLength] = useState (p.length);
     const props: Prop[] = [];
 
-    for (let i = 1; i <= p.length; i++) {
+    lnh.updateLength = (length: number): void => {
+        setLength(length);
+    }
+
+    lnh.scrollTo = (scrollTo: number): void => {
+        lnh.ref.current!.scrollTop = scrollTo;
+    }
+
+    for (let i = 1; i <= length; i++) {
         props.push({key: `${p._key}-ln-${i}`, num: i, active: (p.active === i)? true: false} as Prop)
     }
 
-    return <div className={`line-numbers ${p._key}`}>
-        {props.map((prop) => {
+    return <div className={`line-numbers--outer ${p._key}`} ref={lnh.ref}>
+        <div className='line-numbers--inner'>{props.map((prop) => {
             return <LineNumber key={prop.key} num={prop.num} active={prop.active}/>
-        })}
-        <style>{`div.line-numbers.${p._key} {--length: ${p.length};}`}</style>
+        })}</div>        
+        <style>{`div.line-numbers.${p._key} {--length: ${length};}`}</style>
     </div>
+}
+
+class LineNumbersHandler {
+    public ref = useRef() as RefObject<HTMLDivElement>;
+
+    constructor () {}
+
+    public scrollTo (scrollTo: number): void { /* コンポーネント内で実装 */ }
+
+    public updateLength (length: number): void { /* コンポーネント内で実装 */}
 }
 
 export default LineNumbers;
@@ -30,4 +50,8 @@ interface Prop {
     key: string;
     num: number;
     active: boolean
+}
+
+export {
+    LineNumbersHandler
 }
